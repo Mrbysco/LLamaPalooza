@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:tag",
-          "expand": false,
+          "expand": true,
           "functions": [
             {
               "add": false,
@@ -23,7 +23,7 @@
         },
         {
           "type": "minecraft:tag",
-          "expand": false,
+          "expand": true,
           "functions": [
             {
               "add": false,
@@ -40,7 +40,7 @@
         },
         {
           "type": "minecraft:tag",
-          "expand": false,
+          "expand": true,
           "functions": [
             {
               "add": false,
@@ -57,7 +57,7 @@
         },
         {
           "type": "minecraft:tag",
-          "expand": false,
+          "expand": true,
           "functions": [
             {
               "add": false,
@@ -74,7 +74,7 @@
         },
         {
           "type": "minecraft:tag",
-          "expand": false,
+          "expand": true,
           "functions": [
             {
               "add": false,
@@ -91,7 +91,7 @@
         },
         {
           "type": "minecraft:tag",
-          "expand": false,
+          "expand": true,
           "functions": [
             {
               "add": false,
@@ -108,7 +108,7 @@
         },
         {
           "type": "minecraft:tag",
-          "expand": false,
+          "expand": true,
           "functions": [
             {
               "add": false,
@@ -125,7 +125,7 @@
         },
         {
           "type": "minecraft:tag",
-          "expand": false,
+          "expand": true,
           "functions": [
             {
               "add": false,
@@ -138,7 +138,7 @@
         },
         {
           "type": "minecraft:tag",
-          "expand": false,
+          "expand": true,
           "functions": [
             {
               "add": false,
