@@ -12,6 +12,8 @@ import java.util.List;
 public class LLamaConfig {
     public static class Common {
         public final ModConfigSpec.ConfigValue<List<? extends String>> lootTables;
+        public final ModConfigSpec.IntValue spitInterval;
+        public final ModConfigSpec.IntValue speedReduction;
 
         Common(ModConfigSpec.Builder builder) {
             builder.comment("General settings")
@@ -25,8 +27,16 @@ public class LLamaConfig {
 
 
             lootTables = builder
-                    .comment("The list of loot tables known to the mod")
+                    .comment("The list of loot tables known to the mod (Syntax: namespace:loot_table_name, e.g. minecraft:chests/simple_dungeon)")
                     .defineListAllowEmpty(List.of("tables"), () -> List.of(tables), o -> (o instanceof String));
+
+            spitInterval = builder
+                    .comment("The interval in ticks between Loot Llamas spitting items out (20 ticks = 1 second) [default = 200 ticks])")
+                    .defineInRange("spitInterval", 200, 1, Integer.MAX_VALUE);
+
+            speedReduction = builder
+                    .comment("The amount of ticks reduced per Speed upgrade level (20 ticks = 1 second) [default = 20 ticks]")
+                    .defineInRange("speedReduction", 20, 1, Integer.MAX_VALUE);
 
             builder.pop();
         }

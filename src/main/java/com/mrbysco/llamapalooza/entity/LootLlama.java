@@ -1,5 +1,6 @@
 package com.mrbysco.llamapalooza.entity;
 
+import com.mrbysco.llamapalooza.config.LLamaConfig;
 import com.mrbysco.llamapalooza.entity.projectile.LlamaItemSpit;
 import com.mrbysco.llamapalooza.registry.LLamaRegistry;
 import com.mrbysco.llamapalooza.registry.LlamaSerializers;
@@ -39,7 +40,7 @@ public class LootLlama extends Llama {
 	private static final EntityDataAccessor<Integer> SPEED_ID = SynchedEntityData.defineId(LootLlama.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> GAIN_ID = SynchedEntityData.defineId(LootLlama.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> STRENGTH_ID = SynchedEntityData.defineId(LootLlama.class, EntityDataSerializers.INT);
-	private int spitTimer = 200;
+	private int spitTimer = -1;
 
 	public LootLlama(EntityType<? extends Llama> type, Level level) {
 		super(type, level);
@@ -136,6 +137,9 @@ public class LootLlama extends Llama {
 	@Override
 	protected void customServerAiStep() {
 		super.customServerAiStep();
+		if (this.spitTimer == -1) {
+			this.spitTimer = this.getSpitCooldown();
+		}
 		if (this.spitTimer > 0) {
 			--this.spitTimer;
 		} else {
@@ -198,7 +202,7 @@ public class LootLlama extends Llama {
 	}
 
 	public int getSpitCooldown() {
-		return Math.max(1, 200 - (this.getLootSpeed() * 20));
+		return Math.max(1, LLamaConfig.COMMON.spitInterval.get() - (this.getLootSpeed() * LLamaConfig.COMMON.speedReduction.get()));
 	}
 
 	private List<ItemStack> generateLoot() {
