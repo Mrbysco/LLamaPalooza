@@ -3,7 +3,7 @@ package com.mrbysco.llamapalooza.data.client;
 import com.mrbysco.llamapalooza.LlamaPalooza;
 import com.mrbysco.llamapalooza.registry.LLamaRegistry;
 import net.minecraft.data.PackOutput;
-import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.minecraftforge.common.data.LanguageProvider;
 
 public class LLamaLanguageProvider extends LanguageProvider {
     public LLamaLanguageProvider(PackOutput packOutput) {

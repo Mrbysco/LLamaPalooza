@@ -2,20 +2,20 @@ package com.mrbysco.llamapalooza.config;
 
 import com.mrbysco.llamapalooza.LlamaPalooza;
 import com.mrbysco.llamapalooza.registry.LLamaTables;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.event.config.ModConfigEvent;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 
 public class LLamaConfig {
     public static class Common {
-        public final ModConfigSpec.ConfigValue<List<? extends String>> lootTables;
-        public final ModConfigSpec.IntValue spitInterval;
-        public final ModConfigSpec.IntValue speedReduction;
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> lootTables;
+        public final ForgeConfigSpec.IntValue spitInterval;
+        public final ForgeConfigSpec.IntValue speedReduction;
 
-        Common(ModConfigSpec.Builder builder) {
+        Common(ForgeConfigSpec.Builder builder) {
             builder.comment("General settings")
                     .push("general");
 
@@ -42,11 +42,11 @@ public class LLamaConfig {
         }
     }
 
-    public static final ModConfigSpec commonSpec;
+    public static final ForgeConfigSpec commonSpec;
     public static final Common COMMON;
 
     static {
-        final Pair<Common, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(Common::new);
+        final Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
         commonSpec = specPair.getRight();
         COMMON = specPair.getLeft();
     }

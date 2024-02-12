@@ -20,14 +20,14 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.DeferredSpawnEggItem;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
 
-public class LootLlamaSpawnEgg extends DeferredSpawnEggItem {
+public class LootLlamaSpawnEgg extends ForgeSpawnEggItem {
     public LootLlamaSpawnEgg(final Properties properties) {
         super(LLamaRegistry.LOOT_LLAMA, 12623485, 10051392, properties);
     }

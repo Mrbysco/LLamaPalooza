@@ -4,9 +4,8 @@ import com.mrbysco.llamapalooza.LlamaPalooza;
 import com.mrbysco.llamapalooza.registry.LLamaRegistry;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class LlamaModelProvider extends ItemModelProvider {
     public LlamaModelProvider(PackOutput packOutput, ExistingFileHelper existingFileHelper) {
