@@ -17,27 +17,27 @@ import org.slf4j.Logger;
 
 @Mod(LlamaPalooza.MOD_ID)
 public class LlamaPalooza {
-    public static final String MOD_ID = "llamapalooza";
-    public static final Logger LOGGER = LogUtils.getLogger();
+	public static final String MOD_ID = "llamapalooza";
+	public static final Logger LOGGER = LogUtils.getLogger();
 
-    public LlamaPalooza() {
-        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, LLamaConfig.commonSpec);
-        eventBus.register(LLamaConfig.class);
+	public LlamaPalooza() {
+		IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, LLamaConfig.commonSpec);
+		eventBus.register(LLamaConfig.class);
 
-        LLamaRegistry.ITEMS.register(eventBus);
-        LLamaRegistry.CREATIVE_MODE_TABS.register(eventBus);
-        LLamaRegistry.ENTITY_TYPES.register(eventBus);
-        LlamaSerializers.ENTITY_DATA_SERIALIZER.register(eventBus);
+		LLamaRegistry.ITEMS.register(eventBus);
+		LLamaRegistry.CREATIVE_MODE_TABS.register(eventBus);
+		LLamaRegistry.ENTITY_TYPES.register(eventBus);
+		LlamaSerializers.ENTITY_DATA_SERIALIZER.register(eventBus);
 
-        eventBus.addListener(this::registerEntityAttributes);
+		eventBus.addListener(this::registerEntityAttributes);
 
-        if (FMLEnvironment.dist.isClient()) {
-            eventBus.addListener(ClientHandler::registerEntityRenders);
-        }
-    }
+		if (FMLEnvironment.dist.isClient()) {
+			eventBus.addListener(ClientHandler::registerEntityRenders);
+		}
+	}
 
-    public void registerEntityAttributes(EntityAttributeCreationEvent event) {
-        event.put(LLamaRegistry.LOOT_LLAMA.get(), LootLlama.createAttributes().build());
-    }
+	public void registerEntityAttributes(EntityAttributeCreationEvent event) {
+		event.put(LLamaRegistry.LOOT_LLAMA.get(), LootLlama.createAttributes().build());
+	}
 }

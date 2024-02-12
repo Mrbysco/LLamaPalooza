@@ -14,36 +14,36 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public class LlamaSerializers {
-    public static final DeferredRegister<EntityDataSerializer<?>> ENTITY_DATA_SERIALIZER = DeferredRegister.create(ForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS, LlamaPalooza.MOD_ID);
+	public static final DeferredRegister<EntityDataSerializer<?>> ENTITY_DATA_SERIALIZER = DeferredRegister.create(ForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS, LlamaPalooza.MOD_ID);
 
-    public static final Supplier<EntityDataSerializer<Optional<ResourceLocation>>> RESOURCE_LOCATION = ENTITY_DATA_SERIALIZER.register("optional_resource_location", () -> EntityDataSerializer.optional(FriendlyByteBuf::writeResourceLocation, FriendlyByteBuf::readResourceLocation));
-    public static final Supplier<EntityDataSerializer<List<ItemStack>>> ITEM_STACKS = ENTITY_DATA_SERIALIZER.register("item_stacks", () -> new EntityDataSerializer<>() {
+	public static final Supplier<EntityDataSerializer<Optional<ResourceLocation>>> RESOURCE_LOCATION = ENTITY_DATA_SERIALIZER.register("optional_resource_location", () -> EntityDataSerializer.optional(FriendlyByteBuf::writeResourceLocation, FriendlyByteBuf::readResourceLocation));
+	public static final Supplier<EntityDataSerializer<List<ItemStack>>> ITEM_STACKS = ENTITY_DATA_SERIALIZER.register("item_stacks", () -> new EntityDataSerializer<>() {
 
-        @Override
-        public void write(FriendlyByteBuf byteBuf, List<ItemStack> stacks) {
-            byteBuf.writeInt(stacks.size());
-            for (ItemStack stack : stacks) {
-                byteBuf.writeItem(stack);
-            }
-        }
+		@Override
+		public void write(FriendlyByteBuf byteBuf, List<ItemStack> stacks) {
+			byteBuf.writeInt(stacks.size());
+			for (ItemStack stack : stacks) {
+				byteBuf.writeItem(stack);
+			}
+		}
 
-        @Override
-        public List<ItemStack> read(FriendlyByteBuf byteBuf) {
-            int count = byteBuf.readInt();
-            if (count > 0) {
-                List<ItemStack> stacks = new ArrayList<>();
-                for (int i = 0; i < count; i++) {
-                    stacks.add(byteBuf.readItem());
-                }
-                return stacks;
-            }
+		@Override
+		public List<ItemStack> read(FriendlyByteBuf byteBuf) {
+			int count = byteBuf.readInt();
+			if (count > 0) {
+				List<ItemStack> stacks = new ArrayList<>();
+				for (int i = 0; i < count; i++) {
+					stacks.add(byteBuf.readItem());
+				}
+				return stacks;
+			}
 
-            return new ArrayList<>();
-        }
+			return new ArrayList<>();
+		}
 
-        @Override
-        public List<ItemStack> copy(List<ItemStack> stacks) {
-            return stacks;
-        }
-    });
+		@Override
+		public List<ItemStack> copy(List<ItemStack> stacks) {
+			return stacks;
+		}
+	});
 }
