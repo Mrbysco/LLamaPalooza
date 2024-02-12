@@ -1,1 +1,2 @@
-* Initial 1.20.4 beta
+* Change loottable
+* Remove accidental logging
