@@ -220,7 +220,6 @@ public class LootLlama extends Llama {
 					stacks.add(generatedLoot.get(0));
 				}
 			}
-			System.out.println(stacks);
 			return stacks;
 		}
 		return new ArrayList<>();
