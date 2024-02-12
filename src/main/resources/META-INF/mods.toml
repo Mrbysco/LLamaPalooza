@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[2,)"
+issueTrackerURL="https://github.com/Mrbysco/LlamaPalooza/issues"
+license="MIT"
+
+[[mods]]
+modId="llamapalooza"
+version="${file.jarVersion}"
+displayName="LLamaPalooza"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/llamapalooza"
+authors="Mrbysco, ShyNieke"
+description='''
+Llama, llama, llama!
+'''
+[[dependencies.llamapalooza]]
+modId="minecraft"
+type="REQUIRED"
+versionRange="[1.20.4,1.21)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.llamapalooza]]
+modId="neoforge"
+type="REQUIRED"
+versionRange="[20.4.131-beta,)"
+ordering="NONE"
+side="BOTH"

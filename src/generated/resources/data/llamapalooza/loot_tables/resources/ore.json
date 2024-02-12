@@ -1,0 +1,158 @@
+{
+  "type": "minecraft:gift",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:tag",
+          "expand": false,
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 6.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "forge:ores/coal",
+          "weight": 20
+        },
+        {
+          "type": "minecraft:tag",
+          "expand": false,
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 5.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "forge:ores/iron",
+          "weight": 18
+        },
+        {
+          "type": "minecraft:tag",
+          "expand": false,
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 5.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "forge:ores/copper",
+          "weight": 15
+        },
+        {
+          "type": "minecraft:tag",
+          "expand": false,
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 4.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "forge:ores/gold",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:tag",
+          "expand": false,
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 3.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "forge:ores/lapis",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:tag",
+          "expand": false,
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 3.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "forge:ores/redstone",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:tag",
+          "expand": false,
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 3.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "forge:ores/quartz",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:tag",
+          "expand": false,
+          "functions": [
+            {
+              "add": false,
+              "count": 1.0,
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "forge:ores/emerald",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:tag",
+          "expand": false,
+          "functions": [
+            {
+              "add": false,
+              "count": 1.0,
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "forge:ores/diamond",
+          "weight": 4
+        }
+      ],
+      "name": "main",
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "llamapalooza:resources/ore"
+}

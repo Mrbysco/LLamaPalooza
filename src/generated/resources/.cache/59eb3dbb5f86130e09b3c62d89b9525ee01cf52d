@@ -1,0 +1,4 @@
+// 1.20.4	2024-02-03T21:32:27.2731159	Loot Tables
+1eaa30a983d77253a02ab0c61ea005110ccb9b08 data/llamapalooza/loot_tables/entities/loot_llama.json
+64f54f3aff0892fb2fa07ae047720c87cc2a258f data/llamapalooza/loot_tables/resources/general.json
+586f85994006c5472a4f12ee8ede3a0600913ec9 data/llamapalooza/loot_tables/resources/ore.json
