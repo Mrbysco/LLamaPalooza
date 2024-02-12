@@ -28,62 +28,62 @@ import java.util.List;
 import java.util.Objects;
 
 public class LootLlamaSpawnEgg extends DeferredSpawnEggItem {
-    public LootLlamaSpawnEgg(final Properties properties) {
-        super(LLamaRegistry.LOOT_LLAMA, 12623485, 10051392, properties);
-    }
+	public LootLlamaSpawnEgg(final Properties properties) {
+		super(LLamaRegistry.LOOT_LLAMA, 12623485, 10051392, properties);
+	}
 
-    public InteractionResult useOn(UseOnContext context) {
-        Level level = context.getLevel();
-        if (!(level instanceof ServerLevel)) {
-            return InteractionResult.SUCCESS;
-        } else {
-            ItemStack handStack = context.getItemInHand();
-            BlockPos clickedPos = context.getClickedPos();
-            Direction clickedFace = context.getClickedFace();
-            BlockState blockstate = level.getBlockState(clickedPos);
-            CompoundTag tag = handStack.getTag() == null ? new CompoundTag() : handStack.getTag();
-            if (blockstate.is(Blocks.SPAWNER)) {
-                BlockEntity blockentity = level.getBlockEntity(clickedPos);
-                if (blockentity instanceof SpawnerBlockEntity spawnerblockentity) {
-                    EntityType<LootLlama> type = LLamaRegistry.LOOT_LLAMA.get();
-                    spawnerblockentity.setEntityId(type, level.getRandom());
-                    blockentity.setChanged();
-                    level.sendBlockUpdated(clickedPos, blockstate, blockstate, 3);
-                    handStack.shrink(1);
-                    return InteractionResult.CONSUME;
-                }
-            } else {
-                BlockPos pos;
-                if (blockstate.getCollisionShape(level, clickedPos).isEmpty()) {
-                    pos = clickedPos;
-                } else {
-                    pos = clickedPos.relative(clickedFace);
-                }
+	public InteractionResult useOn(UseOnContext context) {
+		Level level = context.getLevel();
+		if (!(level instanceof ServerLevel)) {
+			return InteractionResult.SUCCESS;
+		} else {
+			ItemStack handStack = context.getItemInHand();
+			BlockPos clickedPos = context.getClickedPos();
+			Direction clickedFace = context.getClickedFace();
+			BlockState blockstate = level.getBlockState(clickedPos);
+			CompoundTag tag = handStack.getTag() == null ? new CompoundTag() : handStack.getTag();
+			if (blockstate.is(Blocks.SPAWNER)) {
+				BlockEntity blockentity = level.getBlockEntity(clickedPos);
+				if (blockentity instanceof SpawnerBlockEntity spawnerblockentity) {
+					EntityType<LootLlama> type = LLamaRegistry.LOOT_LLAMA.get();
+					spawnerblockentity.setEntityId(type, level.getRandom());
+					blockentity.setChanged();
+					level.sendBlockUpdated(clickedPos, blockstate, blockstate, 3);
+					handStack.shrink(1);
+					return InteractionResult.CONSUME;
+				}
+			} else {
+				BlockPos pos;
+				if (blockstate.getCollisionShape(level, clickedPos).isEmpty()) {
+					pos = clickedPos;
+				} else {
+					pos = clickedPos.relative(clickedFace);
+				}
 
-                EntityType<LootLlama> type = LLamaRegistry.LOOT_LLAMA.get();
-                LootLlama llama = type.spawn((ServerLevel) level, handStack, context.getPlayer(), pos, MobSpawnType.SPAWN_EGG, true, !Objects.equals(clickedPos, pos) && clickedFace == Direction.UP);
-                if (llama != null) {
-                    if (tag.contains("LootTable")) {
-                        llama.setLootTable(ResourceLocation.tryParse(tag.getString("LootTable")));
-                    }
-                    handStack.shrink(1);
-                }
-            }
+				EntityType<LootLlama> type = LLamaRegistry.LOOT_LLAMA.get();
+				LootLlama llama = type.spawn((ServerLevel) level, handStack, context.getPlayer(), pos, MobSpawnType.SPAWN_EGG, true, !Objects.equals(clickedPos, pos) && clickedFace == Direction.UP);
+				if (llama != null) {
+					if (tag.contains("LootTable")) {
+						llama.setLootTable(ResourceLocation.tryParse(tag.getString("LootTable")));
+					}
+					handStack.shrink(1);
+				}
+			}
 
-            return InteractionResult.CONSUME;
-        }
-    }
+			return InteractionResult.CONSUME;
+		}
+	}
 
-    @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, level, tooltip, flagIn);
-        CompoundTag tag = stack.hasTag() ? stack.getTag() : new CompoundTag();
-        if (tag != null && !tag.getString("LootTable").isEmpty()) {
-            ResourceLocation location = ResourceLocation.tryParse(tag.getString("LootTable"));
-            if (location != null) {
-                tooltip.add(Component.literal("Table: ").withStyle(ChatFormatting.YELLOW)
-                        .append(Component.literal(location.toString()).withStyle(ChatFormatting.GOLD)));
-            }
-        }
-    }
+	@Override
+	public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
+		super.appendHoverText(stack, level, tooltip, flagIn);
+		CompoundTag tag = stack.hasTag() ? stack.getTag() : new CompoundTag();
+		if (tag != null && !tag.getString("LootTable").isEmpty()) {
+			ResourceLocation location = ResourceLocation.tryParse(tag.getString("LootTable"));
+			if (location != null) {
+				tooltip.add(Component.literal("Table: ").withStyle(ChatFormatting.YELLOW)
+						.append(Component.literal(location.toString()).withStyle(ChatFormatting.GOLD)));
+			}
+		}
+	}
 }

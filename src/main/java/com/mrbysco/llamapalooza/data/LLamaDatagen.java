@@ -12,18 +12,18 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class LLamaDatagen {
-    @SubscribeEvent
-    public static void gatherData(GatherDataEvent event) {
-        DataGenerator generator = event.getGenerator();
-        PackOutput packOutput = generator.getPackOutput();
-        ExistingFileHelper helper = event.getExistingFileHelper();
+	@SubscribeEvent
+	public static void gatherData(GatherDataEvent event) {
+		DataGenerator generator = event.getGenerator();
+		PackOutput packOutput = generator.getPackOutput();
+		ExistingFileHelper helper = event.getExistingFileHelper();
 
-        if (event.includeServer()) {
-            generator.addProvider(true, new LLamaLootProvider(packOutput));
-        }
-        if (event.includeClient()) {
-            generator.addProvider(true, new LLamaLanguageProvider(packOutput));
-            generator.addProvider(true, new LlamaModelProvider(packOutput, helper));
-        }
-    }
+		if (event.includeServer()) {
+			generator.addProvider(true, new LLamaLootProvider(packOutput));
+		}
+		if (event.includeClient()) {
+			generator.addProvider(true, new LLamaLanguageProvider(packOutput));
+			generator.addProvider(true, new LlamaModelProvider(packOutput, helper));
+		}
+	}
 }

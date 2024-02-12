@@ -12,21 +12,21 @@ import net.minecraft.resources.ResourceLocation;
 
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
-    private static final ResourceLocation UID = new ResourceLocation(LlamaPalooza.MOD_ID, "jei_plugin");
+	private static final ResourceLocation UID = new ResourceLocation(LlamaPalooza.MOD_ID, "jei_plugin");
 
-    @Override
-    public ResourceLocation getPluginUid() {
-        return UID;
-    }
+	@Override
+	public ResourceLocation getPluginUid() {
+		return UID;
+	}
 
-    @Override
-    public void registerCategories(IRecipeCategoryRegistration registration) {
-        IJeiHelpers jeiHelpers = registration.getJeiHelpers();
-        IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
-    }
+	@Override
+	public void registerCategories(IRecipeCategoryRegistration registration) {
+		IJeiHelpers jeiHelpers = registration.getJeiHelpers();
+		IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
+	}
 
-    @Override
-    public void registerItemSubtypes(ISubtypeRegistration registration) {
-        registration.useNbtForSubtypes(LLamaRegistry.LOOT_LLAMA_SPAWN_EGG.get());
-    }
+	@Override
+	public void registerItemSubtypes(ISubtypeRegistration registration) {
+		registration.useNbtForSubtypes(LLamaRegistry.LOOT_LLAMA_SPAWN_EGG.get());
+	}
 }

@@ -6,17 +6,17 @@ import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
 public class LLamaLanguageProvider extends LanguageProvider {
-    public LLamaLanguageProvider(PackOutput packOutput) {
-        super(packOutput, LlamaPalooza.MOD_ID, "en_us");
-    }
+	public LLamaLanguageProvider(PackOutput packOutput) {
+		super(packOutput, LlamaPalooza.MOD_ID, "en_us");
+	}
 
-    @Override
-    protected void addTranslations() {
-        addEntityType(LLamaRegistry.LOOT_LLAMA, "Loot Llama");
-        addEntityType(LLamaRegistry.ITEM_SPIT, "Item Spit");
+	@Override
+	protected void addTranslations() {
+		addEntityType(LLamaRegistry.LOOT_LLAMA, "Loot Llama");
+		addEntityType(LLamaRegistry.ITEM_SPIT, "Item Spit");
 
-        addItem(LLamaRegistry.LOOT_LLAMA_SPAWN_EGG, "Loot Llama Spawn Egg");
+		addItem(LLamaRegistry.LOOT_LLAMA_SPAWN_EGG, "Loot Llama Spawn Egg");
 
-        add("itemGroup.llamapalooza", "LlamaPalooza");
-    }
+		add("itemGroup.llamapalooza", "LlamaPalooza");
+	}
 }

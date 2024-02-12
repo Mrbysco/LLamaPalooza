@@ -255,7 +255,7 @@ public class LootLlama extends Llama {
 	@Nullable
 	@Override
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor levelAccessor, DifficultyInstance difficultyInstance,
-										MobSpawnType spawnType, @Nullable SpawnGroupData groupData, @Nullable CompoundTag tag) {
+	                                    MobSpawnType spawnType, @Nullable SpawnGroupData groupData, @Nullable CompoundTag tag) {
 		return super.finalizeSpawn(levelAccessor, difficultyInstance, spawnType, groupData, tag);
 	}
 }

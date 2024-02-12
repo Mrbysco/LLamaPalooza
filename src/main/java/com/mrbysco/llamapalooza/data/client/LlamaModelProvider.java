@@ -6,15 +6,14 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.common.data.LanguageProvider;
 
 public class LlamaModelProvider extends ItemModelProvider {
-    public LlamaModelProvider(PackOutput packOutput, ExistingFileHelper existingFileHelper) {
-        super(packOutput, LlamaPalooza.MOD_ID, existingFileHelper);
-    }
+	public LlamaModelProvider(PackOutput packOutput, ExistingFileHelper existingFileHelper) {
+		super(packOutput, LlamaPalooza.MOD_ID, existingFileHelper);
+	}
 
-    @Override
-    protected void registerModels() {
-        this.withExistingParent(LLamaRegistry.LOOT_LLAMA_SPAWN_EGG.getId().getPath(), new ResourceLocation("item/template_spawn_egg"));
-    }
+	@Override
+	protected void registerModels() {
+		this.withExistingParent(LLamaRegistry.LOOT_LLAMA_SPAWN_EGG.getId().getPath(), new ResourceLocation("item/template_spawn_egg"));
+	}
 }
