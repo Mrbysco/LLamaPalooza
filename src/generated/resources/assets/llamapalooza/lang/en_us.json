@@ -2,5 +2,6 @@
   "entity.llamapalooza.item_spit": "Item Spit",
   "entity.llamapalooza.loot_llama": "Loot Llama",
   "item.llamapalooza.loot_llama_spawn_egg": "Loot Llama Spawn Egg",
-  "itemGroup.llamapalooza": "LlamaPalooza"
+  "itemGroup.llamapalooza": "LlamaPalooza",
+  "llamapalooza.stats": "Stats: %s/%s/%s"
 }
