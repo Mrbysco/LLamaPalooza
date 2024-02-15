@@ -37,6 +37,7 @@ import java.util.Optional;
 
 public class LootLlama extends Llama {
 	private static final EntityDataAccessor<Optional<ResourceLocation>> LOOT_ID = SynchedEntityData.defineId(LootLlama.class, LlamaSerializers.RESOURCE_LOCATION.get());
+	private static final EntityDataAccessor<Integer> TIMER = SynchedEntityData.defineId(LootLlama.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> SPEED_ID = SynchedEntityData.defineId(LootLlama.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> GAIN_ID = SynchedEntityData.defineId(LootLlama.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> STRENGTH_ID = SynchedEntityData.defineId(LootLlama.class, EntityDataSerializers.INT);
@@ -58,6 +59,7 @@ public class LootLlama extends Llama {
 		this.entityData.define(SPEED_ID, 0);
 		this.entityData.define(GAIN_ID, 0);
 		this.entityData.define(STRENGTH_ID, 0);
+		this.entityData.define(TIMER, 0);
 	}
 
 	public void setLootTable(@Nullable ResourceLocation lootTable) {
@@ -103,6 +105,14 @@ public class LootLlama extends Llama {
 		return 9;
 	}
 
+	public void setTimer(int count) {
+		this.entityData.set(TIMER, count);
+	}
+
+	public int getTimer() {
+		return this.entityData.get(TIMER);
+	}
+
 	public int getLootStrength() {
 		return this.entityData.get(STRENGTH_ID);
 	}
@@ -117,7 +127,7 @@ public class LootLlama extends Llama {
 		tag.putInt("LootGain", this.getLootGain());
 		tag.putInt("LootStrength", this.getLootStrength());
 
-		tag.putInt("SpitTimer", this.spitTimer);
+		tag.putInt("SpitTimer", getTimer());
 	}
 
 	@Override
@@ -131,17 +141,24 @@ public class LootLlama extends Llama {
 		this.setLootGain(tag.getInt("LootGain"));
 		this.setLootStrength(tag.getInt("LootStrength"));
 
-		this.spitTimer = tag.getInt("SpitTimer");
+		this.setTimer(tag.getInt("SpitTimer"));
+	}
+
+	@Override
+	public void aiStep() {
+		super.aiStep();
+		if (this.isAlive()) {
+
+		}
 	}
 
 	@Override
 	protected void customServerAiStep() {
 		super.customServerAiStep();
-		if (this.spitTimer == -1) {
-			this.spitTimer = this.getSpitCooldown();
-		}
-		if (this.spitTimer > 0) {
-			--this.spitTimer;
+		if (this.getTimer() == -1) {
+			this.setTimer(this.getSpitCooldown());
+		} else if (this.getTimer() > 0) {
+			this.setTimer(this.getTimer() - 1);
 		} else {
 			Player player = this.level().getNearestPlayer(this, 16.0D);
 			if (player != null && this.hasLineOfSight(player)) {
@@ -153,7 +170,7 @@ public class LootLlama extends Llama {
 			} else {
 				this.spitItem(new Vec3(0, 1, 0), 0.5F);
 			}
-			this.spitTimer = this.getSpitCooldown();
+			this.setTimer(this.getSpitCooldown());
 		}
 	}
 

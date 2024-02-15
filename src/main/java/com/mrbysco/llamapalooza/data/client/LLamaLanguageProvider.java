@@ -20,5 +20,6 @@ public class LLamaLanguageProvider extends LanguageProvider {
 		add("itemGroup.llamapalooza", "LlamaPalooza");
 
 		add("llamapalooza.stats", "Stats: %s/%s/%s");
+		add("llamapalooza.cooldown", "Spit Cooldown: %s");
 	}
 }
