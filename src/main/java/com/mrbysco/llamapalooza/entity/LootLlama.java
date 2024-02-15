@@ -78,7 +78,7 @@ public class LootLlama extends Llama {
 	}
 
 	public int getMaxLootSpeed() {
-		return 9;
+		return 10;
 	}
 
 	public int getLootSpeed() {
@@ -90,7 +90,7 @@ public class LootLlama extends Llama {
 	}
 
 	public int getMaxLootGain() {
-		return 9;
+		return 10;
 	}
 
 	public int getLootGain() {
@@ -102,7 +102,7 @@ public class LootLlama extends Llama {
 	}
 
 	public int getMaxLootStrength() {
-		return 9;
+		return 10;
 	}
 
 	public void setTimer(int count) {
