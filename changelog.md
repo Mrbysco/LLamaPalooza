@@ -1,2 +1,2 @@
-* Change loottable
-* Remove accidental logging
+* Add Jade Support
+* Add The One Probe support
