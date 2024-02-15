@@ -18,5 +18,7 @@ public class LLamaLanguageProvider extends LanguageProvider {
 		addItem(LLamaRegistry.LOOT_LLAMA_SPAWN_EGG, "Loot Llama Spawn Egg");
 
 		add("itemGroup.llamapalooza", "LlamaPalooza");
+
+		add("llamapalooza.stats", "Stats: %s/%s/%s");
 	}
 }

@@ -2,6 +2,7 @@ package com.mrbysco.llamapalooza;
 
 import com.mojang.logging.LogUtils;
 import com.mrbysco.llamapalooza.client.ClientHandler;
+import com.mrbysco.llamapalooza.compat.top.TOPCompat;
 import com.mrbysco.llamapalooza.config.LLamaConfig;
 import com.mrbysco.llamapalooza.entity.LootLlama;
 import com.mrbysco.llamapalooza.registry.LLamaRegistry;
@@ -13,6 +14,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import org.slf4j.Logger;
 
 @Mod(LlamaPalooza.MOD_ID)
@@ -25,6 +27,8 @@ public class LlamaPalooza {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, LLamaConfig.commonSpec);
 		eventBus.register(LLamaConfig.class);
 
+		eventBus.addListener(this::sendImc);
+
 		LLamaRegistry.ITEMS.register(eventBus);
 		LLamaRegistry.CREATIVE_MODE_TABS.register(eventBus);
 		LLamaRegistry.ENTITY_TYPES.register(eventBus);
@@ -34,6 +38,12 @@ public class LlamaPalooza {
 
 		if (FMLEnvironment.dist.isClient()) {
 			eventBus.addListener(ClientHandler::registerEntityRenders);
+		}
+	}
+
+	public void sendImc(InterModEnqueueEvent event) {
+		if (ModList.get().isLoaded("theoneprobe")) {
+			TOPCompat.register();
 		}
 	}
 
