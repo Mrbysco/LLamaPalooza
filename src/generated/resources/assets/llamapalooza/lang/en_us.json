@@ -3,5 +3,6 @@
   "entity.llamapalooza.loot_llama": "Loot Llama",
   "item.llamapalooza.loot_llama_spawn_egg": "Loot Llama Spawn Egg",
   "itemGroup.llamapalooza": "LlamaPalooza",
+  "llamapalooza.cooldown": "Spit Cooldown: %s",
   "llamapalooza.stats": "Stats: %s/%s/%s"
 }
