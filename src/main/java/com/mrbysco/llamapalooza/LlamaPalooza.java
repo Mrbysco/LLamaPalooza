@@ -9,12 +9,13 @@ import com.mrbysco.llamapalooza.registry.LLamaRegistry;
 import com.mrbysco.llamapalooza.registry.LlamaSerializers;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import org.slf4j.Logger;
 
 @Mod(LlamaPalooza.MOD_ID)
