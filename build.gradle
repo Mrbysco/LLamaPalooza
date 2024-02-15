@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.86'
+    id 'net.neoforged.gradle.userdev' version '7.0.93'
     id 'net.darkhax.curseforgegradle' version '1.1.17'
     id 'com.modrinth.minotaur' version "2.+"
 }
@@ -61,6 +61,12 @@ repositories {
     maven {
         url = "https://maven.blamejared.com"
     }
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 dependencies {
@@ -72,6 +78,9 @@ dependencies {
     runtimeOnly "mezz.jei:jei-${mc_version}-neoforge:${jei_version}"
 
     implementation "com.blamejared.crafttweaker:CraftTweaker-neoforge-${mc_version}:${crafttweaker_version}"
+
+    implementation "curse.maven:jade-324717:${jade_id}"
+    implementation "curse.maven:TheOneProbe-245211:${top_id}"
 }
 
 jar {
