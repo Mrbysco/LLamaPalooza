@@ -9,6 +9,7 @@ import mcjty.theoneprobe.api.ITheOneProbe;
 import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -24,22 +25,39 @@ public class TOPCompat {
 	public static final class GetTheOneProbe implements Function<ITheOneProbe, Void> {
 		@Override
 		public Void apply(ITheOneProbe input) {
-			input.registerEntityProvider(new LLamaInfo());
+			input.registerEntityProvider(new LLamaStatInfo());
+			input.registerEntityProvider(new LLamaTimerInfo());
 			return null;
 		}
 	}
 
-	public static final class LLamaInfo implements IProbeInfoEntityProvider {
-
+	public static final class LLamaStatInfo implements IProbeInfoEntityProvider {
 		@Override
 		public String getID() {
-			return new ResourceLocation(LlamaPalooza.MOD_ID, "main").toString();
+			return new ResourceLocation(LlamaPalooza.MOD_ID, "stats").toString();
 		}
 
 		@Override
 		public void addProbeEntityInfo(ProbeMode probeMode, IProbeInfo probeInfo, Player player, Level level, Entity entity, IProbeHitEntityData iProbeHitEntityData) {
 			if (entity instanceof LootLlama lootLlama) {
 				probeInfo.horizontal().text(Component.translatable("llamapalooza.stats", lootLlama.getLootSpeed(), lootLlama.getLootGain(), lootLlama.getLootStrength()));
+			}
+		}
+	}
+
+
+	public static final class LLamaTimerInfo implements IProbeInfoEntityProvider {
+		@Override
+		public String getID() {
+			return new ResourceLocation(LlamaPalooza.MOD_ID, "timer").toString();
+		}
+
+		@Override
+		public void addProbeEntityInfo(ProbeMode probeMode, IProbeInfo probeInfo, Player player, Level level, Entity entity, IProbeHitEntityData iProbeHitEntityData) {
+			if (entity instanceof LootLlama lootLlama) {
+				//Get timer converted to seconds
+				int seconds = Mth.ceil(lootLlama.getTimer() / 20f);
+				probeInfo.horizontal().text(Component.translatable("llamapalooza.cooldown", seconds));
 			}
 		}
 	}
