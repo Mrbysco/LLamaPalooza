@@ -18,7 +18,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "forge:ores/coal",
+          "name": "c:ores/coal",
           "weight": 20
         },
         {
@@ -35,7 +35,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "forge:ores/iron",
+          "name": "c:ores/iron",
           "weight": 18
         },
         {
@@ -52,7 +52,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "forge:ores/copper",
+          "name": "c:ores/copper",
           "weight": 15
         },
         {
@@ -69,7 +69,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "forge:ores/gold",
+          "name": "c:ores/gold",
           "weight": 10
         },
         {
@@ -86,7 +86,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "forge:ores/lapis",
+          "name": "c:ores/lapis",
           "weight": 8
         },
         {
@@ -103,7 +103,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "forge:ores/redstone",
+          "name": "c:ores/redstone",
           "weight": 8
         },
         {
@@ -120,7 +120,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "forge:ores/quartz",
+          "name": "c:ores/quartz",
           "weight": 6
         },
         {
@@ -133,7 +133,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "forge:ores/emerald",
+          "name": "c:ores/emerald",
           "weight": 5
         },
         {
@@ -146,7 +146,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "forge:ores/diamond",
+          "name": "c:ores/diamond",
           "weight": 4
         }
       ],

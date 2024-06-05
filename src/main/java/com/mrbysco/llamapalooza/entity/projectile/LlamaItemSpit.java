@@ -26,6 +26,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class LlamaItemSpit extends Projectile implements ItemSupplier {
 	private static final EntityDataAccessor<List<ItemStack>> DATA_ITEM_STACK = SynchedEntityData.defineId(
@@ -62,8 +63,8 @@ public class LlamaItemSpit extends Projectile implements ItemSupplier {
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		this.getEntityData().define(DATA_ITEM_STACK, new ArrayList<>());
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		builder.define(DATA_ITEM_STACK, new ArrayList<>());
 	}
 
 	@Override
@@ -72,7 +73,7 @@ public class LlamaItemSpit extends Projectile implements ItemSupplier {
 		tag.putInt("ItemCount", this.getItems().size());
 		if (!this.getItems().isEmpty()) {
 			for (int i = 0; i < this.getItems().size(); i++) {
-				tag.put("Item" + i, this.getItems().get(i).save(new CompoundTag()));
+				tag.put("Item" + i, this.getItems().get(i).save(this.registryAccess(), new CompoundTag()));
 			}
 		}
 	}
@@ -80,11 +81,13 @@ public class LlamaItemSpit extends Projectile implements ItemSupplier {
 	@Override
 	public void readAdditionalSaveData(CompoundTag tag) {
 		super.readAdditionalSaveData(tag);
+
 		int count = tag.getInt("ItemCount");
 		if (count > 0) {
 			List<ItemStack> stacks = new ArrayList<>();
 			for (int i = 0; i < count; i++) {
-				stacks.add(ItemStack.of(tag.getCompound("Item" + i)));
+				Optional<ItemStack> optionalStack = ItemStack.parse(this.registryAccess(), tag.getCompound("Item" + i));
+				optionalStack.ifPresent(stacks::add);
 			}
 			this.setItems(stacks);
 		}

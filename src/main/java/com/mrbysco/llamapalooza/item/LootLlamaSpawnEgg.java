@@ -2,10 +2,10 @@ package com.mrbysco.llamapalooza.item;
 
 import com.mrbysco.llamapalooza.entity.LootLlama;
 import com.mrbysco.llamapalooza.registry.LLamaRegistry;
+import com.mrbysco.llamapalooza.registry.LlamaDataComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -16,13 +16,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
+import net.minecraft.world.level.Spawner;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -37,36 +34,33 @@ public class LootLlamaSpawnEgg extends DeferredSpawnEggItem {
 		if (!(level instanceof ServerLevel)) {
 			return InteractionResult.SUCCESS;
 		} else {
-			ItemStack handStack = context.getItemInHand();
-			BlockPos clickedPos = context.getClickedPos();
-			Direction clickedFace = context.getClickedFace();
-			BlockState blockstate = level.getBlockState(clickedPos);
-			CompoundTag tag = handStack.getTag() == null ? new CompoundTag() : handStack.getTag();
-			if (blockstate.is(Blocks.SPAWNER)) {
-				BlockEntity blockentity = level.getBlockEntity(clickedPos);
-				if (blockentity instanceof SpawnerBlockEntity spawnerblockentity) {
-					EntityType<LootLlama> type = LLamaRegistry.LOOT_LLAMA.get();
-					spawnerblockentity.setEntityId(type, level.getRandom());
-					blockentity.setChanged();
-					level.sendBlockUpdated(clickedPos, blockstate, blockstate, 3);
-					handStack.shrink(1);
-					return InteractionResult.CONSUME;
-				}
+			ItemStack itemstack = context.getItemInHand();
+			BlockPos blockpos = context.getClickedPos();
+			Direction direction = context.getClickedFace();
+			BlockState blockstate = level.getBlockState(blockpos);
+			if (level.getBlockEntity(blockpos) instanceof Spawner spawner) {
+				EntityType<LootLlama> type = LLamaRegistry.LOOT_LLAMA.get();
+				spawner.setEntityId(type, level.getRandom());
+				level.sendBlockUpdated(blockpos, blockstate, blockstate, 3);
+				level.gameEvent(context.getPlayer(), GameEvent.BLOCK_CHANGE, blockpos);
+				itemstack.shrink(1);
+				return InteractionResult.CONSUME;
 			} else {
 				BlockPos pos;
-				if (blockstate.getCollisionShape(level, clickedPos).isEmpty()) {
-					pos = clickedPos;
+				if (blockstate.getCollisionShape(level, blockpos).isEmpty()) {
+					pos = blockpos;
 				} else {
-					pos = clickedPos.relative(clickedFace);
+					pos = blockpos.relative(direction);
 				}
 
 				EntityType<LootLlama> type = LLamaRegistry.LOOT_LLAMA.get();
-				LootLlama llama = type.spawn((ServerLevel) level, handStack, context.getPlayer(), pos, MobSpawnType.SPAWN_EGG, true, !Objects.equals(clickedPos, pos) && clickedFace == Direction.UP);
+				LootLlama llama = type.spawn((ServerLevel) level, itemstack, context.getPlayer(), pos, MobSpawnType.SPAWN_EGG, true, !Objects.equals(blockpos, pos) && direction == Direction.UP);
 				if (llama != null) {
-					if (tag.contains("LootTable")) {
-						llama.setLootTable(ResourceLocation.tryParse(tag.getString("LootTable")));
+					if (itemstack.has(LlamaDataComponents.LOOT_TABLE)) {
+						llama.setLootTable(itemstack.get(LlamaDataComponents.LOOT_TABLE));
 					}
-					handStack.shrink(1);
+					itemstack.shrink(1);
+					level.gameEvent(context.getPlayer(), GameEvent.ENTITY_PLACE, blockpos);
 				}
 			}
 
@@ -75,11 +69,10 @@ public class LootLlamaSpawnEgg extends DeferredSpawnEggItem {
 	}
 
 	@Override
-	public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-		super.appendHoverText(stack, level, tooltip, flagIn);
-		CompoundTag tag = stack.hasTag() ? stack.getTag() : new CompoundTag();
-		if (tag != null && !tag.getString("LootTable").isEmpty()) {
-			ResourceLocation location = ResourceLocation.tryParse(tag.getString("LootTable"));
+	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+		super.appendHoverText(stack, context, tooltip, flag);
+		if (stack.has(LlamaDataComponents.LOOT_TABLE)) {
+			ResourceLocation location = stack.get(LlamaDataComponents.LOOT_TABLE);
 			if (location != null) {
 				tooltip.add(Component.literal("Table: ").withStyle(ChatFormatting.YELLOW)
 						.append(Component.literal(location.toString()).withStyle(ChatFormatting.GOLD)));

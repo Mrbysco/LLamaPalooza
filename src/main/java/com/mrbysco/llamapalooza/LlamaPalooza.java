@@ -6,14 +6,15 @@ import com.mrbysco.llamapalooza.compat.top.TOPCompat;
 import com.mrbysco.llamapalooza.config.LLamaConfig;
 import com.mrbysco.llamapalooza.entity.LootLlama;
 import com.mrbysco.llamapalooza.registry.LLamaRegistry;
+import com.mrbysco.llamapalooza.registry.LlamaDataComponents;
 import com.mrbysco.llamapalooza.registry.LlamaSerializers;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import org.slf4j.Logger;
 
@@ -22,12 +23,13 @@ public class LlamaPalooza {
 	public static final String MOD_ID = "llamapalooza";
 	public static final Logger LOGGER = LogUtils.getLogger();
 
-	public LlamaPalooza(IEventBus eventBus) {
-		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, LLamaConfig.commonSpec);
+	public LlamaPalooza(IEventBus eventBus, ModContainer container, Dist dist) {
+		container.registerConfig(ModConfig.Type.COMMON, LLamaConfig.commonSpec);
 		eventBus.register(LLamaConfig.class);
 
 		eventBus.addListener(this::sendImc);
 
+		LlamaDataComponents.DATA_COMPONENT_TYPES.register(eventBus);
 		LLamaRegistry.ITEMS.register(eventBus);
 		LLamaRegistry.CREATIVE_MODE_TABS.register(eventBus);
 		LLamaRegistry.ENTITY_TYPES.register(eventBus);
@@ -35,7 +37,7 @@ public class LlamaPalooza {
 
 		eventBus.addListener(this::registerEntityAttributes);
 
-		if (FMLEnvironment.dist.isClient()) {
+		if (dist.isClient()) {
 			eventBus.addListener(ClientHandler::registerEntityRenders);
 		}
 	}

@@ -6,8 +6,8 @@ import com.mrbysco.llamapalooza.entity.LootLlama;
 import com.mrbysco.llamapalooza.entity.projectile.LlamaItemSpit;
 import com.mrbysco.llamapalooza.item.LootLlamaSpawnEgg;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
@@ -46,10 +46,7 @@ public class LLamaRegistry {
 					if (table.isEmpty()) continue;
 
 					ItemStack spawnEgg = new ItemStack(LLamaRegistry.LOOT_LLAMA_SPAWN_EGG.get());
-					CompoundTag tag = spawnEgg.getOrCreateTag();
-					tag.putString("LootTable", table);
-					spawnEgg.setTag(tag);
-
+					spawnEgg.set(LlamaDataComponents.LOOT_TABLE, new ResourceLocation(table));
 					output.accept(spawnEgg);
 				}
 			}).build());

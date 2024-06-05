@@ -39,7 +39,8 @@
           "weight": 8
         },
         {
-          "type": "minecraft:item",
+          "type": "minecraft:tag",
+          "expand": true,
           "functions": [
             {
               "add": false,
@@ -51,7 +52,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "minecraft:gravel",
+          "name": "c:gravels",
           "weight": 8
         },
         {
@@ -68,7 +69,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "forge:cobblestone",
+          "name": "c:cobblestones",
           "weight": 8
         },
         {
@@ -85,7 +86,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "minecraft:sand",
+          "name": "c:sands",
           "weight": 6
         },
         {

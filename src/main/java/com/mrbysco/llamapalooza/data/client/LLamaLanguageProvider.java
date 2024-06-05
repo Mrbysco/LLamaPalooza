@@ -19,7 +19,7 @@ public class LLamaLanguageProvider extends LanguageProvider {
 
 		add("itemGroup.llamapalooza", "LlamaPalooza");
 
-		add("llamapalooza.stats", "Stats: %s/%s/%s");
-		add("llamapalooza.cooldown", "Spit Cooldown: %s");
+		add("config.jade.plugin_llamapalooza.stats", "Stats: %s/%s/%s");
+		add("config.jade.plugin_llamapalooza.cooldown", "Spit Cooldown: %s");
 	}
 }

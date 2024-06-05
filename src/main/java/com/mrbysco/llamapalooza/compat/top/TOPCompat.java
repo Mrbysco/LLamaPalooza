@@ -40,7 +40,7 @@ public class TOPCompat {
 		@Override
 		public void addProbeEntityInfo(ProbeMode probeMode, IProbeInfo probeInfo, Player player, Level level, Entity entity, IProbeHitEntityData iProbeHitEntityData) {
 			if (entity instanceof LootLlama lootLlama) {
-				probeInfo.horizontal().text(Component.translatable("llamapalooza.stats", lootLlama.getLootSpeed(), lootLlama.getLootGain(), lootLlama.getLootStrength()));
+				probeInfo.horizontal().text(Component.translatable("config.jade.plugin_llamapalooza.stats", lootLlama.getLootSpeed(), lootLlama.getLootGain(), lootLlama.getLootStrength()));
 			}
 		}
 	}
@@ -57,7 +57,7 @@ public class TOPCompat {
 			if (entity instanceof LootLlama lootLlama) {
 				//Get timer converted to seconds
 				int seconds = Mth.ceil(lootLlama.getTimer() / 20f);
-				probeInfo.horizontal().text(Component.translatable("llamapalooza.cooldown", seconds));
+				probeInfo.horizontal().text(Component.translatable("config.jade.plugin_llamapalooza.cooldown", seconds));
 			}
 		}
 	}

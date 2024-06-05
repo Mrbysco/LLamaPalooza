@@ -2,11 +2,12 @@ package com.mrbysco.llamapalooza.data.server;
 
 import com.mrbysco.llamapalooza.registry.LLamaRegistry;
 import com.mrbysco.llamapalooza.registry.LLamaTables;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.EntityLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.loot.LootTableSubProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlags;
@@ -25,15 +26,16 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 public class LLamaLootProvider extends LootTableProvider {
-	public LLamaLootProvider(PackOutput packOutput) {
+	public LLamaLootProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
 		super(packOutput, Set.of(), List.of(
 				new SubProviderEntry(LLamaGiftLoot::new, LootContextParamSets.GIFT),
 				new SubProviderEntry(LLamaEntityLoot::new, LootContextParamSets.ENTITY)
-		));
+		), lookupProvider);
 	}
 
 	private static class LLamaEntityLoot extends EntityLootSubProvider {
@@ -66,7 +68,7 @@ public class LLamaLootProvider extends LootTableProvider {
 
 	private static class LLamaGiftLoot implements LootTableSubProvider {
 		@Override
-		public void generate(BiConsumer<ResourceLocation, LootTable.Builder> consumer) {
+		public void generate(HolderLookup.Provider provider, BiConsumer<ResourceKey<LootTable>, LootTable.Builder> consumer) {
 			consumer.accept(LLamaTables.GENERAL, LootTable.lootTable()
 					.withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F))
 							.name("main")
@@ -76,13 +78,13 @@ public class LLamaLootProvider extends LootTableProvider {
 							.add(TagEntry.expandTag(ItemTags.LOGS).setWeight(8)
 									.apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 4.0F)))
 							)
-							.add(LootItem.lootTableItem(Items.GRAVEL).setWeight(8)
+							.add(TagEntry.expandTag(Tags.Items.GRAVELS).setWeight(8)
 									.apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 16.0F)))
 							)
-							.add(TagEntry.expandTag(Tags.Items.COBBLESTONE).setWeight(8)
+							.add(TagEntry.expandTag(Tags.Items.COBBLESTONES).setWeight(8)
 									.apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 16.0F)))
 							)
-							.add(TagEntry.expandTag(ItemTags.SAND).setWeight(6)
+							.add(TagEntry.expandTag(Tags.Items.SANDS).setWeight(6)
 									.apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 16.0F)))
 							)
 							.add(LootItem.lootTableItem(Items.CLAY).setWeight(5)

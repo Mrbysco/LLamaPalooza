@@ -4,10 +4,12 @@ import com.mrbysco.llamapalooza.config.LLamaConfig;
 import com.mrbysco.llamapalooza.entity.projectile.LlamaItemSpit;
 import com.mrbysco.llamapalooza.registry.LLamaRegistry;
 import com.mrbysco.llamapalooza.registry.LlamaSerializers;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -41,7 +43,6 @@ public class LootLlama extends Llama {
 	private static final EntityDataAccessor<Integer> SPEED_ID = SynchedEntityData.defineId(LootLlama.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> GAIN_ID = SynchedEntityData.defineId(LootLlama.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> STRENGTH_ID = SynchedEntityData.defineId(LootLlama.class, EntityDataSerializers.INT);
-	private int spitTimer = -1;
 
 	public LootLlama(EntityType<? extends Llama> type, Level level) {
 		super(type, level);
@@ -53,13 +54,13 @@ public class LootLlama extends Llama {
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		this.entityData.define(LOOT_ID, Optional.empty());
-		this.entityData.define(SPEED_ID, 0);
-		this.entityData.define(GAIN_ID, 0);
-		this.entityData.define(STRENGTH_ID, 0);
-		this.entityData.define(TIMER, 0);
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
+		builder.define(LOOT_ID, Optional.empty());
+		builder.define(SPEED_ID, 0);
+		builder.define(GAIN_ID, 0);
+		builder.define(STRENGTH_ID, 0);
+		builder.define(TIMER, 0);
 	}
 
 	public void setLootTable(@Nullable ResourceLocation lootTable) {
@@ -71,6 +72,12 @@ public class LootLlama extends Llama {
 
 	public ResourceLocation getLootID() {
 		return this.entityData.get(LOOT_ID).orElse(null);
+	}
+
+	public ResourceKey<LootTable> getLootKey() {
+		ResourceLocation id = getLootID();
+		if (id == null) return null;
+		return ResourceKey.create(Registries.LOOT_TABLE, id);
 	}
 
 	public void setLootSpeed(int growth) {
@@ -226,7 +233,7 @@ public class LootLlama extends Llama {
 		if (this.getLootID() != null && !this.level().isClientSide) {
 			ServerLevel serverLevel = (ServerLevel) this.level();
 			List<ItemStack> stacks = new ArrayList<>();
-			LootTable lootTable = serverLevel.getServer().getLootData().getLootTable(this.getLootID());
+			LootTable lootTable = serverLevel.getServer().reloadableRegistries().getLootTable(this.getLootKey());
 			LootParams.Builder builder = (new LootParams.Builder(serverLevel))
 					.withParameter(LootContextParams.THIS_ENTITY, this)
 					.withParameter(LootContextParams.ORIGIN, this.position());
@@ -271,7 +278,11 @@ public class LootLlama extends Llama {
 	@Nullable
 	@Override
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor levelAccessor, DifficultyInstance difficultyInstance,
-	                                    MobSpawnType spawnType, @Nullable SpawnGroupData groupData, @Nullable CompoundTag tag) {
-		return super.finalizeSpawn(levelAccessor, difficultyInstance, spawnType, groupData, tag);
+	                                    MobSpawnType spawnType, @Nullable SpawnGroupData groupData) {
+		groupData = super.finalizeSpawn(levelAccessor, difficultyInstance, spawnType, groupData);
+
+		setTimer(this.getSpitCooldown());
+		
+		return groupData;
 	}
 }
