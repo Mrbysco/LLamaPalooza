@@ -21,8 +21,8 @@ public class LLamaConfig {
 
 			String[] tables = new String[]
 					{
-							LLamaTables.GENERAL.toString(),
-							LLamaTables.ORES.toString()
+							LLamaTables.GENERAL.location().toString(),
+							LLamaTables.ORES.location().toString()
 					};
 
 
