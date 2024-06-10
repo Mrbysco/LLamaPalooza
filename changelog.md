@@ -1,1 +1,1 @@
-* Initial update to 1.20.6 
+* Fix config mistake that caused a crash **Please delete your old config to let it regenerate!**
