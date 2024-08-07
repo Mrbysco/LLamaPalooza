@@ -14,6 +14,6 @@ public class LlamaModelProvider extends ItemModelProvider {
 
 	@Override
 	protected void registerModels() {
-		this.withExistingParent(LLamaRegistry.LOOT_LLAMA_SPAWN_EGG.getId().getPath(), new ResourceLocation("item/template_spawn_egg"));
+		this.withExistingParent(LLamaRegistry.LOOT_LLAMA_SPAWN_EGG.getId().getPath(), ResourceLocation.withDefaultNamespace("item/template_spawn_egg"));
 	}
 }

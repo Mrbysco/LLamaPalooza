@@ -28,14 +28,14 @@ public class JadeCompat implements IWailaPlugin {
 	}
 
 	public static class LootLlamaStatProvider implements IEntityComponentProvider {
-		private static final ResourceLocation STATS = new ResourceLocation(LlamaPalooza.MOD_ID, "stats");
+		private static final ResourceLocation STATS = LlamaPalooza.modLoc("stats");
 
 		public static final LootLlamaStatProvider INSTANCE = new LootLlamaStatProvider();
 
 		@Override
 		public void appendTooltip(ITooltip iTooltip, EntityAccessor entityAccessor, IPluginConfig iPluginConfig) {
 			if (entityAccessor.getEntity() instanceof LootLlama lootLlama) {
-				iTooltip.add(Component.translatable("llamapalooza.stats",
+				iTooltip.add(Component.translatable("config.jade.plugin_llamapalooza.stats",
 						lootLlama.getLootSpeed(), lootLlama.getLootGain(), lootLlama.getLootStrength()));
 			}
 		}
@@ -47,7 +47,7 @@ public class JadeCompat implements IWailaPlugin {
 	}
 
 	public static class LootLlamaCooldownProvider implements IEntityComponentProvider {
-		private static final ResourceLocation COOLDOWN = new ResourceLocation(LlamaPalooza.MOD_ID, "cooldown");
+		private static final ResourceLocation COOLDOWN = LlamaPalooza.modLoc("cooldown");
 
 		public static final LootLlamaCooldownProvider INSTANCE = new LootLlamaCooldownProvider();
 
@@ -56,7 +56,7 @@ public class JadeCompat implements IWailaPlugin {
 			if (entityAccessor.getEntity() instanceof LootLlama lootLlama && lootLlama.getTimer() >= 0) {
 				//Get timer converted to seconds
 				int seconds = Mth.ceil(lootLlama.getTimer() / 20f);
-				iTooltip.add(Component.translatable("llamapalooza.cooldown", seconds));
+				iTooltip.add(Component.translatable("config.jade.plugin_llamapalooza.cooldown", seconds));
 			}
 		}
 

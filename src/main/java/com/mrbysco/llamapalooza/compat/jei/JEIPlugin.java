@@ -12,7 +12,7 @@
 //
 //@JeiPlugin
 //public class JEIPlugin implements IModPlugin {
-//	private static final ResourceLocation UID = new ResourceLocation(LlamaPalooza.MOD_ID, "jei_plugin");
+//	private static final ResourceLocation UID = LlamaPalooza.modLoc("jei_plugin");
 //
 //	@Override
 //	public ResourceLocation getPluginUid() {

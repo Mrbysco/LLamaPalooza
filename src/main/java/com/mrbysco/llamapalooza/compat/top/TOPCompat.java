@@ -34,7 +34,7 @@ public class TOPCompat {
 	public static final class LLamaStatInfo implements IProbeInfoEntityProvider {
 		@Override
 		public String getID() {
-			return new ResourceLocation(LlamaPalooza.MOD_ID, "stats").toString();
+			return LlamaPalooza.modLoc("stats").toString();
 		}
 
 		@Override
@@ -49,7 +49,7 @@ public class TOPCompat {
 	public static final class LLamaTimerInfo implements IProbeInfoEntityProvider {
 		@Override
 		public String getID() {
-			return new ResourceLocation(LlamaPalooza.MOD_ID, "timer").toString();
+			return LlamaPalooza.modLoc("timer").toString();
 		}
 
 		@Override

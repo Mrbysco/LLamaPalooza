@@ -1,4 +1,4 @@
-// 1.20.6	2024-06-05T14:47:04.0044793	Loot Tables
-1eaa30a983d77253a02ab0c61ea005110ccb9b08 data/llamapalooza/loot_tables/entities/loot_llama.json
-c9731bfedd5a31e032e82cfc2418d8bbcb88ab55 data/llamapalooza/loot_tables/resources/general.json
-a63cae7077d67341e8957f1526b7a30492aad693 data/llamapalooza/loot_tables/resources/ore.json
+// 1.21	2024-08-07T22:56:38.0001475	Loot Tables
+0cd92e9d33dd97a91ca916c90a56c84fd114e8ed data/llamapalooza/loot_table/entities/loot_llama.json
+c9731bfedd5a31e032e82cfc2418d8bbcb88ab55 data/llamapalooza/loot_table/resources/general.json
+a63cae7077d67341e8957f1526b7a30492aad693 data/llamapalooza/loot_table/resources/ore.json

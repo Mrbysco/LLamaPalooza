@@ -11,6 +11,6 @@ public class LLamaTables {
 	public static final ResourceKey<LootTable> ORES = registerTable("resources/ore");
 
 	private static ResourceKey<LootTable> registerTable(String path) {
-		return ResourceKey.create(Registries.LOOT_TABLE, new ResourceLocation(LlamaPalooza.MOD_ID, path));
+		return ResourceKey.create(Registries.LOOT_TABLE, LlamaPalooza.modLoc(path));
 	}
 }

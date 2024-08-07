@@ -15,6 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
@@ -142,7 +143,7 @@ public class LootLlama extends Llama {
 		super.readAdditionalSaveData(tag);
 
 		if (tag.contains("LootTable", 8)) {
-			this.setLootTable(new ResourceLocation(tag.getString("LootTable")));
+			this.setLootTable(ResourceLocation.tryParse(tag.getString("LootTable")));
 		}
 		this.setLootSpeed(tag.getInt("LootSpeed"));
 		this.setLootGain(tag.getInt("LootGain"));
@@ -182,8 +183,23 @@ public class LootLlama extends Llama {
 	}
 
 	@Override
-	protected int getInventorySize() {
-		return 2;
+	protected void createInventory() {
+		SimpleContainer simplecontainer = this.inventory;
+		this.inventory = new SimpleContainer(2);
+		if (simplecontainer != null) {
+			simplecontainer.removeListener(this);
+			int i = Math.min(simplecontainer.getContainerSize(), this.inventory.getContainerSize());
+
+			for (int j = 0; j < i; j++) {
+				ItemStack itemstack = simplecontainer.getItem(j);
+				if (!itemstack.isEmpty()) {
+					this.inventory.setItem(j, itemstack.copy());
+				}
+			}
+		}
+
+		this.inventory.addListener(this);
+		this.syncSaddleToClients();
 	}
 
 	@Nullable
@@ -282,7 +298,7 @@ public class LootLlama extends Llama {
 		groupData = super.finalizeSpawn(levelAccessor, difficultyInstance, spawnType, groupData);
 
 		setTimer(this.getSpitCooldown());
-		
+
 		return groupData;
 	}
 }

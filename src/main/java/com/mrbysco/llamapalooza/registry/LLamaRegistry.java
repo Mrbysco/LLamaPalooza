@@ -46,7 +46,7 @@ public class LLamaRegistry {
 					if (table.isEmpty()) continue;
 
 					ItemStack spawnEgg = new ItemStack(LLamaRegistry.LOOT_LLAMA_SPAWN_EGG.get());
-					spawnEgg.set(LlamaDataComponents.LOOT_TABLE, new ResourceLocation(table));
+					spawnEgg.set(LlamaDataComponents.LOOT_TABLE, ResourceLocation.withDefaultNamespace(table));
 					output.accept(spawnEgg);
 				}
 			}).build());
