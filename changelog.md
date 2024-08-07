@@ -1,1 +1,1 @@
-* Fix config mistake that caused a crash **Please delete your old config to let it regenerate!**
+* Initial port to 1.21
