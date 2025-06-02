@@ -1,1 +1,1 @@
-* Initial port to 1.21
+* Fix creative tab loot table parsing
