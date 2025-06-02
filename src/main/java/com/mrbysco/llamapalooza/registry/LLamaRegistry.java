@@ -46,7 +46,12 @@ public class LLamaRegistry {
 					if (table.isEmpty()) continue;
 
 					ItemStack spawnEgg = new ItemStack(LLamaRegistry.LOOT_LLAMA_SPAWN_EGG.get());
-					spawnEgg.set(LlamaDataComponents.LOOT_TABLE, ResourceLocation.withDefaultNamespace(table));
+					ResourceLocation tableLocation = ResourceLocation.tryParse(table);
+					if (tableLocation == null) {
+						LlamaPalooza.LOGGER.error("Invalid loot table: {}", table);
+						continue;
+					}
+					spawnEgg.set(LlamaDataComponents.LOOT_TABLE, tableLocation);
 					output.accept(spawnEgg);
 				}
 			}).build());
