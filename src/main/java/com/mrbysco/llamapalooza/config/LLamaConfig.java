@@ -28,7 +28,7 @@ public class LLamaConfig {
 
 			lootTables = builder
 					.comment("The list of loot tables known to the mod (Syntax: namespace:loot_table_name, e.g. minecraft:chests/simple_dungeon)")
-					.defineListAllowEmpty(List.of("tables"), () -> List.of(tables), o -> (o instanceof String));
+					.defineListAllowEmpty(List.of("tables"), () -> List.of(tables), String::new, o -> (o instanceof String));
 
 			spitInterval = builder
 					.comment("The interval in ticks between Loot Llamas spitting items out (20 ticks = 1 second) [default = 200 ticks])")
