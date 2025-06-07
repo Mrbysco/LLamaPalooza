@@ -4,6 +4,7 @@ import com.mrbysco.llamapalooza.config.LLamaConfig;
 import com.mrbysco.llamapalooza.entity.projectile.LlamaItemSpit;
 import com.mrbysco.llamapalooza.registry.LLamaRegistry;
 import com.mrbysco.llamapalooza.registry.LlamaSerializers;
+import net.minecraft.commands.arguments.EntityAnchorArgument.Anchor;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -174,7 +175,10 @@ public class LootLlama extends Llama {
 				double d1 = player.getY(0.3333333333333333) - (this.getEyeY() - 0.1F);
 				double d2 = player.getZ() - this.getZ();
 				double d3 = Math.sqrt(d0 * d0 + d2 * d2) * 0.2F;
-				this.spitItem(new Vec3(d0, d1 + d3, d2), 1.0F);
+				Vec3 targetPos = new Vec3(d0, d1 + d3, d2);
+				getLookControl().setLookAt(player);
+				lookAt(Anchor.EYES, targetPos);
+				this.spitItem(targetPos, 1.0F);
 			} else {
 				this.spitItem(new Vec3(0, 1, 0), 0.5F);
 			}
@@ -273,6 +277,8 @@ public class LootLlama extends Llama {
 		LlamaItemSpit itemSpit = new LlamaItemSpit(this.level(), this);
 		itemSpit.setItems(loot);
 
+		getLookControl().setLookAt(targetPos);
+		lookAt(Anchor.EYES, targetPos);
 		itemSpit.shoot(targetPos.x, targetPos.y, targetPos.z, velocity, 2.0F);
 		if (!this.isSilent()) {
 			this.level()
