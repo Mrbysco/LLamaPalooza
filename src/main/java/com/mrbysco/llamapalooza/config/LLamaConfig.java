@@ -14,6 +14,7 @@ public class LLamaConfig {
 		public final ModConfigSpec.ConfigValue<List<? extends String>> lootTables;
 		public final ModConfigSpec.IntValue spitInterval;
 		public final ModConfigSpec.IntValue speedReduction;
+		public final ModConfigSpec.BooleanValue alwaysSpit;
 
 		Common(ModConfigSpec.Builder builder) {
 			builder.comment("General settings")
@@ -37,6 +38,11 @@ public class LLamaConfig {
 			speedReduction = builder
 					.comment("The amount of ticks reduced per Speed upgrade level (20 ticks = 1 second) [default = 20 ticks]")
 					.defineInRange("speedReduction", 20, 1, Integer.MAX_VALUE);
+
+			alwaysSpit = builder
+					.comment("If true, Loot Llamas will always spit items even when there are no players nearby. ",
+							"Otherwise, they will only spit items when a player is within 16 blocks of them. [default = false]")
+					.define("alwaysSpit", true);
 
 			builder.pop();
 		}

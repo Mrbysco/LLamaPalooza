@@ -180,7 +180,9 @@ public class LootLlama extends Llama {
 				lookAt(Anchor.EYES, targetPos);
 				this.spitItem(targetPos, 1.0F);
 			} else {
-				this.spitItem(new Vec3(0, 1, 0), 0.5F);
+				if (LLamaConfig.COMMON.alwaysSpit.get()) {
+					this.spitItem(new Vec3(0, 1, 0), 0.5F);
+				}
 			}
 			this.setTimer(this.getSpitCooldown());
 		}
