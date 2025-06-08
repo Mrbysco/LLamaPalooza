@@ -1,1 +1,1 @@
-* Fix creative tab loot table parsing
+* Add `alwaysSpit` config option that can be disabled to prevent the loot llamas from always spitting even when there is no player nearby
