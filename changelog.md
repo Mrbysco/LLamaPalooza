@@ -1,1 +1,2 @@
-* Add `alwaysSpit` config option that can be disabled to prevent the loot llamas from always spitting even when there is no player nearby
+* Fix carpets not rendering on Loot Llama's
+* Fix the Loot Llama Strength doing nothing
