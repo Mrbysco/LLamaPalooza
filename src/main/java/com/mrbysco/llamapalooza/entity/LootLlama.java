@@ -258,7 +258,8 @@ public class LootLlama extends Llama {
 			LootTable lootTable = serverLevel.getServer().reloadableRegistries().getLootTable(this.getLootKey());
 			LootParams.Builder builder = (new LootParams.Builder(serverLevel))
 					.withParameter(LootContextParams.THIS_ENTITY, this)
-					.withParameter(LootContextParams.ORIGIN, this.position());
+					.withParameter(LootContextParams.ORIGIN, this.position())
+					.withLuck(getStrength());
 			for (int i = 0; i < (getLootGain() + 1); i++) {
 				List<ItemStack> generatedLoot = lootTable.getRandomItems(builder.create(LootContextParamSets.GIFT));
 				if (!generatedLoot.isEmpty()) {
