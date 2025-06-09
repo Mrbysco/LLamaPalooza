@@ -1,11 +1,13 @@
 package com.mrbysco.llamapalooza.client.renderer;
 
 import com.mrbysco.llamapalooza.LlamaPalooza;
+import com.mrbysco.llamapalooza.client.renderer.layer.LootLlamaDecorLayer;
 import com.mrbysco.llamapalooza.entity.LootLlama;
 import net.minecraft.client.model.LlamaModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.layers.LlamaDecorLayer;
 import net.minecraft.resources.ResourceLocation;
 
 public class LootLLamaRenderer extends MobRenderer<LootLlama, LlamaModel<LootLlama>> {
@@ -17,6 +19,7 @@ public class LootLLamaRenderer extends MobRenderer<LootLlama, LlamaModel<LootLla
 
 	public LootLLamaRenderer(EntityRendererProvider.Context context) {
 		super(context, new LlamaModel<>(context.bakeLayer(ModelLayers.LLAMA)), 0.7F);
+		this.addLayer(new LootLlamaDecorLayer(this, context.getModelSet()));
 	}
 
 	/**
