@@ -59,7 +59,7 @@ public class LlamaItemSpit extends Projectile implements ItemSupplier {
 
 	@Override
 	public ItemStack getItem() {
-		return getItems().isEmpty() ? new ItemStack(Items.AIR) : getItems().get(0);
+		return getItems().isEmpty() ? new ItemStack(Items.AIR) : getItems().getFirst();
 	}
 
 	@Override

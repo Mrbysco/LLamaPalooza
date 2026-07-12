@@ -264,7 +264,7 @@ public class LootLlama extends Llama {
 				List<ItemStack> generatedLoot = lootTable.getRandomItems(builder.create(LootContextParamSets.GIFT));
 				if (!generatedLoot.isEmpty()) {
 					Collections.shuffle(generatedLoot);
-					stacks.add(generatedLoot.get(0));
+					stacks.add(generatedLoot.getFirst());
 				}
 			}
 			return stacks;
