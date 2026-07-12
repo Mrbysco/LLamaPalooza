@@ -9,13 +9,12 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.Supplier;
 
 public class LlamaDataComponents {
-	public static final DeferredRegister<DataComponentType<?>> DATA_COMPONENT_TYPES = DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, LlamaPalooza.MOD_ID);
+	public static final DeferredRegister.DataComponents DATA_COMPONENT_TYPES = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, LlamaPalooza.MOD_ID);
 
-	public static final Supplier<DataComponentType<ResourceLocation>> LOOT_TABLE = DATA_COMPONENT_TYPES.register("loot_table", () ->
-			DataComponentType.<ResourceLocation>builder()
+	public static final Supplier<DataComponentType<ResourceLocation>> LOOT_TABLE = DATA_COMPONENT_TYPES.registerComponentType("loot_table", builder ->
+			builder
 					.persistent(ResourceLocation.CODEC)
 					.networkSynchronized(ResourceLocation.STREAM_CODEC)
 					.cacheEncoding()
-					.build()
 	);
 }
