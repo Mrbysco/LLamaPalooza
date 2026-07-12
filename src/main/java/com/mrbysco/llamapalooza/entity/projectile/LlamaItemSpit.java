@@ -4,10 +4,10 @@ import com.mrbysco.llamapalooza.entity.LootLlama;
 import com.mrbysco.llamapalooza.registry.LLamaRegistry;
 import com.mrbysco.llamapalooza.registry.LlamaSerializers;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -19,6 +19,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -68,31 +70,17 @@ public class LlamaItemSpit extends Projectile implements ItemSupplier {
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag tag) {
-		super.addAdditionalSaveData(tag);
-		tag.putInt("ItemCount", this.getItems().size());
-		if (!this.getItems().isEmpty()) {
-			for (int i = 0; i < this.getItems().size(); i++) {
-				tag.put("Item" + i, this.getItems().get(i).save(this.registryAccess(), new CompoundTag()));
-			}
-		}
+	protected void addAdditionalSaveData(ValueOutput output) {
+		super.addAdditionalSaveData(output);
+		output.store("Items", ItemStack.CODEC.listOf(), this.getItems());
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag tag) {
-		super.readAdditionalSaveData(tag);
-
-		int count = tag.getInt("ItemCount");
-		if (count > 0) {
-			List<ItemStack> stacks = new ArrayList<>();
-			for (int i = 0; i < count; i++) {
-				Optional<ItemStack> optionalStack = ItemStack.parse(this.registryAccess(), tag.getCompound("Item" + i));
-				optionalStack.ifPresent(stacks::add);
-			}
-			this.setItems(stacks);
-		}
+	protected void readAdditionalSaveData(ValueInput input) {
+		super.readAdditionalSaveData(input);
+		Optional<List<ItemStack>> optionalStacks = input.read("Items", ItemStack.CODEC.listOf());
+		optionalStacks.ifPresent(this::setItems);
 	}
-
 
 	/**
 	 * Called to update the entity's position/logic.
@@ -112,7 +100,7 @@ public class LlamaItemSpit extends Projectile implements ItemSupplier {
 		float f1 = 0.06F;
 		if (this.level().getBlockStates(this.getBoundingBox()).noneMatch(BlockBehaviour.BlockStateBase::isAir)) {
 			this.discard();
-		} else if (this.isInWaterOrBubble()) {
+		} else if (this.isInWater()) {
 			this.discard();
 		} else {
 			this.setDeltaMovement(vec3.scale(0.99F));
@@ -131,8 +119,8 @@ public class LlamaItemSpit extends Projectile implements ItemSupplier {
 	protected void onHitEntity(EntityHitResult result) {
 		super.onHitEntity(result);
 		Entity entity = this.getOwner();
-		if (entity instanceof LivingEntity livingentity) {
-			this.spawnItems();
+		if (entity instanceof LivingEntity livingentity && !this.level().isClientSide()) {
+			this.spawnItems((ServerLevel) this.level());
 			if (!(livingentity instanceof LootLlama)) {
 				result.getEntity().hurt(this.damageSources().mobProjectile(this, livingentity), 1.0F);
 			}
@@ -142,33 +130,31 @@ public class LlamaItemSpit extends Projectile implements ItemSupplier {
 	@Override
 	protected void onHitBlock(BlockHitResult result) {
 		super.onHitBlock(result);
-		if (!this.level().isClientSide) {
-			this.spawnItems();
+		if (!this.level().isClientSide()) {
+			this.spawnItems((ServerLevel) this.level());
 			this.discard();
 		}
 	}
 
-	public void spawnItems() {
+	public void spawnItems(ServerLevel serverLevel) {
 		List<ItemStack> stacks = this.getItems();
 		if (!stacks.isEmpty()) {
 			for (ItemStack stack : stacks) {
-				this.spawnAtLocation(stack, 0.5F);
+				this.spawnAtLocation(serverLevel, stack, 0.5F);
 			}
 		}
 	}
 
 	@Override
-	public void recreateFromPacket(ClientboundAddEntityPacket pPacket) {
-		super.recreateFromPacket(pPacket);
-		double d0 = pPacket.getXa();
-		double d1 = pPacket.getYa();
-		double d2 = pPacket.getZa();
+	public void recreateFromPacket(ClientboundAddEntityPacket packet) {
+		super.recreateFromPacket(packet);
+		Vec3 movement = packet.getMovement();
 
-		for (int i = 0; i < 7; ++i) {
-			double d3 = 0.4 + 0.1 * (double) i;
-			this.level().addParticle(ParticleTypes.SPIT, this.getX(), this.getY(), this.getZ(), d0 * d3, d1, d2 * d3);
+		for (int i = 0; i < 7; i++) {
+			double k = 0.4 + 0.1 * i;
+			this.level().addParticle(ParticleTypes.SPIT, this.getX(), this.getY(), this.getZ(), movement.x * k, movement.y, movement.z * k);
 		}
 
-		this.setDeltaMovement(d0, d1, d2);
+		this.setDeltaMovement(movement);
 	}
 }

@@ -6,27 +6,28 @@ import com.mrbysco.llamapalooza.registry.LLamaRegistry;
 import com.mrbysco.llamapalooza.registry.LlamaSerializers;
 import net.minecraft.commands.arguments.EntityAnchorArgument.Anchor;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
-import net.minecraft.world.entity.animal.horse.Llama;
+import net.minecraft.world.entity.animal.equine.AbstractHorse;
+import net.minecraft.world.entity.animal.equine.Llama;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -40,7 +41,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class LootLlama extends Llama {
-	private static final EntityDataAccessor<Optional<ResourceLocation>> LOOT_ID = SynchedEntityData.defineId(LootLlama.class, LlamaSerializers.RESOURCE_LOCATION.get());
+	private static final EntityDataAccessor<Optional<Identifier>> LOOT_ID = SynchedEntityData.defineId(LootLlama.class, LlamaSerializers.RESOURCE_LOCATION.get());
 	private static final EntityDataAccessor<Integer> TIMER = SynchedEntityData.defineId(LootLlama.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> SPEED_ID = SynchedEntityData.defineId(LootLlama.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> GAIN_ID = SynchedEntityData.defineId(LootLlama.class, EntityDataSerializers.INT);
@@ -65,19 +66,19 @@ public class LootLlama extends Llama {
 		builder.define(TIMER, 0);
 	}
 
-	public void setLootTable(@Nullable ResourceLocation lootTable) {
+	public void setLootTable(@Nullable Identifier lootTable) {
 		if (lootTable != null)
 			this.entityData.set(LOOT_ID, Optional.of(lootTable));
 		else
 			this.entityData.set(LOOT_ID, Optional.empty());
 	}
 
-	public ResourceLocation getLootID() {
+	public Identifier getLootID() {
 		return this.entityData.get(LOOT_ID).orElse(null);
 	}
 
 	public ResourceKey<LootTable> getLootKey() {
-		ResourceLocation id = getLootID();
+		Identifier id = getLootID();
 		if (id == null) return null;
 		return ResourceKey.create(Registries.LOOT_TABLE, id);
 	}
@@ -127,30 +128,31 @@ public class LootLlama extends Llama {
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag tag) {
-		super.addAdditionalSaveData(tag);
-		if (this.getLootID() != null) {
-			tag.putString("LootTable", this.getLootID().toString());
-		}
-		tag.putInt("LootSpeed", this.getLootSpeed());
-		tag.putInt("LootGain", this.getLootGain());
-		tag.putInt("LootStrength", this.getLootStrength());
+	protected void addAdditionalSaveData(ValueOutput output) {
+		super.addAdditionalSaveData(output);
 
-		tag.putInt("SpitTimer", getTimer());
+		if (this.getLootID() != null) {
+			output.store("LootTable", Identifier.CODEC, this.getLootID());
+		}
+		output.putInt("LootSpeed", this.getLootSpeed());
+		output.putInt("LootGain", this.getLootGain());
+		output.putInt("LootStrength", this.getLootStrength());
+
+		output.putInt("SpitTimer", getTimer());
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag tag) {
-		super.readAdditionalSaveData(tag);
+	protected void readAdditionalSaveData(ValueInput input) {
+		super.readAdditionalSaveData(input);
 
-		if (tag.contains("LootTable", 8)) {
-			this.setLootTable(ResourceLocation.tryParse(tag.getString("LootTable")));
-		}
-		this.setLootSpeed(tag.getInt("LootSpeed"));
-		this.setLootGain(tag.getInt("LootGain"));
-		this.setLootStrength(tag.getInt("LootStrength"));
+		Optional<Identifier> optionalLootTable = input.read("LootTable", Identifier.CODEC);
+		optionalLootTable.ifPresent(this::setLootTable);
 
-		this.setTimer(tag.getInt("SpitTimer"));
+		this.setLootSpeed(input.getIntOr("LootSpeed", 0));
+		this.setLootGain(input.getIntOr("LootGain", 0));
+		this.setLootStrength(input.getIntOr("LootStrength", 0));
+
+		this.setTimer(input.getIntOr("SpitTimer", 0));
 	}
 
 	@Override
@@ -162,8 +164,8 @@ public class LootLlama extends Llama {
 	}
 
 	@Override
-	protected void customServerAiStep() {
-		super.customServerAiStep();
+	protected void customServerAiStep(ServerLevel serverLevel) {
+		super.customServerAiStep(serverLevel);
 		if (this.getTimer() == -1) {
 			this.setTimer(this.getSpitCooldown());
 		} else if (this.getTimer() > 0) {
@@ -190,28 +192,24 @@ public class LootLlama extends Llama {
 
 	@Override
 	protected void createInventory() {
-		SimpleContainer simplecontainer = this.inventory;
+		SimpleContainer old = this.inventory;
 		this.inventory = new SimpleContainer(2);
-		if (simplecontainer != null) {
-			simplecontainer.removeListener(this);
-			int i = Math.min(simplecontainer.getContainerSize(), this.inventory.getContainerSize());
+		if (old != null) {
+			int i = Math.min(old.getContainerSize(), this.inventory.getContainerSize());
 
 			for (int j = 0; j < i; j++) {
-				ItemStack itemstack = simplecontainer.getItem(j);
+				ItemStack itemstack = old.getItem(j);
 				if (!itemstack.isEmpty()) {
 					this.inventory.setItem(j, itemstack.copy());
 				}
 			}
 		}
-
-		this.inventory.addListener(this);
-		this.syncSaddleToClients();
 	}
 
 	@Nullable
 	@Override
 	public Llama getBreedOffspring(ServerLevel level, AgeableMob otherParent) {
-		LootLlama llama = LLamaRegistry.LOOT_LLAMA.get().create(level);
+		LootLlama llama = LLamaRegistry.LOOT_LLAMA.get().create(level, EntitySpawnReason.BREEDING);
 		if (llama != null && otherParent instanceof LootLlama otherLlama) {
 			this.setOffspringAttributes(otherLlama, llama);
 			llama.setVariant(this.random.nextBoolean() ? this.getVariant() : otherLlama.getVariant());
@@ -252,7 +250,7 @@ public class LootLlama extends Llama {
 	}
 
 	private List<ItemStack> generateLoot() {
-		if (this.getLootID() != null && !this.level().isClientSide) {
+		if (this.getLootID() != null && !this.level().isClientSide()) {
 			ServerLevel serverLevel = (ServerLevel) this.level();
 			List<ItemStack> stacks = new ArrayList<>();
 			LootTable lootTable = serverLevel.getServer().reloadableRegistries().getLootTable(this.getLootKey());
@@ -300,11 +298,9 @@ public class LootLlama extends Llama {
 		this.level().addFreshEntity(itemSpit);
 	}
 
-	@Nullable
 	@Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor levelAccessor, DifficultyInstance difficultyInstance,
-	                                    MobSpawnType spawnType, @Nullable SpawnGroupData groupData) {
-		groupData = super.finalizeSpawn(levelAccessor, difficultyInstance, spawnType, groupData);
+	public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason spawnReason, @org.jspecify.annotations.Nullable SpawnGroupData groupData) {
+		groupData = super.finalizeSpawn(level, difficulty, spawnReason, groupData);
 
 		setTimer(this.getSpitCooldown());
 

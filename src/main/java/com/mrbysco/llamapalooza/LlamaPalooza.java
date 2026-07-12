@@ -1,18 +1,15 @@
 package com.mrbysco.llamapalooza;
 
 import com.mojang.logging.LogUtils;
-import com.mrbysco.llamapalooza.client.ClientHandler;
-import com.mrbysco.llamapalooza.compat.top.TOPCompat;
 import com.mrbysco.llamapalooza.config.LLamaConfig;
 import com.mrbysco.llamapalooza.entity.LootLlama;
 import com.mrbysco.llamapalooza.registry.LLamaRegistry;
 import com.mrbysco.llamapalooza.registry.LlamaDataComponents;
 import com.mrbysco.llamapalooza.registry.LlamaSerializers;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
@@ -42,21 +39,20 @@ public class LlamaPalooza {
 
 		if (dist.isClient()) {
 			container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
-			eventBus.addListener(ClientHandler::registerEntityRenders);
 		}
 	}
 
 	public void sendImc(InterModEnqueueEvent event) {
-		if (ModList.get().isLoaded("theoneprobe")) {
-			TOPCompat.register();
-		}
+//		if (ModList.get().isLoaded("theoneprobe")) {
+//			TOPCompat.register();
+//		}
 	}
 
 	public void registerEntityAttributes(EntityAttributeCreationEvent event) {
 		event.put(LLamaRegistry.LOOT_LLAMA.get(), LootLlama.createAttributes().build());
 	}
 
-	public static ResourceLocation modLoc(String path) {
-		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+	public static Identifier modLoc(String path) {
+		return Identifier.fromNamespaceAndPath(MOD_ID, path);
 	}
 }

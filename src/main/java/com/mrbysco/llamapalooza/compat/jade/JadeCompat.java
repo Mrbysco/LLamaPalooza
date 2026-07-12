@@ -3,7 +3,7 @@ package com.mrbysco.llamapalooza.compat.jade;
 import com.mrbysco.llamapalooza.LlamaPalooza;
 import com.mrbysco.llamapalooza.entity.LootLlama;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import snownee.jade.api.EntityAccessor;
 import snownee.jade.api.IEntityComponentProvider;
@@ -28,7 +28,7 @@ public class JadeCompat implements IWailaPlugin {
 	}
 
 	public static class LootLlamaStatProvider implements IEntityComponentProvider {
-		private static final ResourceLocation STATS = LlamaPalooza.modLoc("stats");
+		private static final Identifier STATS = LlamaPalooza.modLoc("stats");
 
 		public static final LootLlamaStatProvider INSTANCE = new LootLlamaStatProvider();
 
@@ -41,13 +41,13 @@ public class JadeCompat implements IWailaPlugin {
 		}
 
 		@Override
-		public ResourceLocation getUid() {
+		public Identifier getUid() {
 			return STATS;
 		}
 	}
 
 	public static class LootLlamaCooldownProvider implements IEntityComponentProvider {
-		private static final ResourceLocation COOLDOWN = LlamaPalooza.modLoc("cooldown");
+		private static final Identifier COOLDOWN = LlamaPalooza.modLoc("cooldown");
 
 		public static final LootLlamaCooldownProvider INSTANCE = new LootLlamaCooldownProvider();
 
@@ -61,7 +61,7 @@ public class JadeCompat implements IWailaPlugin {
 		}
 
 		@Override
-		public ResourceLocation getUid() {
+		public Identifier getUid() {
 			return COOLDOWN;
 		}
 	}

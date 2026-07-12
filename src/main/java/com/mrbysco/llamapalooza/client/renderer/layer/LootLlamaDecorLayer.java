@@ -1,73 +1,74 @@
 package com.mrbysco.llamapalooza.client.renderer.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mrbysco.llamapalooza.entity.LootLlama;
-import net.minecraft.client.model.LlamaModel;
+import com.mrbysco.llamapalooza.client.renderer.state.LootLlamaRenderState;
+import net.minecraft.client.model.animal.llama.BabyLlamaModel;
+import net.minecraft.client.model.animal.llama.LlamaModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayers;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.DyeColor;
+import net.minecraft.client.renderer.entity.state.LlamaRenderState;
+import net.minecraft.client.resources.model.EquipmentClientInfo;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.equipment.EquipmentAsset;
+import net.minecraft.world.item.equipment.EquipmentAssets;
+import net.minecraft.world.item.equipment.Equippable;
 
-public class LootLlamaDecorLayer extends RenderLayer<LootLlama, LlamaModel<LootLlama>> {
-	private static final ResourceLocation[] TEXTURE_LOCATION = new ResourceLocation[]{
-			ResourceLocation.withDefaultNamespace("textures/entity/llama/decor/white.png"),
-			ResourceLocation.withDefaultNamespace("textures/entity/llama/decor/orange.png"),
-			ResourceLocation.withDefaultNamespace("textures/entity/llama/decor/magenta.png"),
-			ResourceLocation.withDefaultNamespace("textures/entity/llama/decor/light_blue.png"),
-			ResourceLocation.withDefaultNamespace("textures/entity/llama/decor/yellow.png"),
-			ResourceLocation.withDefaultNamespace("textures/entity/llama/decor/lime.png"),
-			ResourceLocation.withDefaultNamespace("textures/entity/llama/decor/pink.png"),
-			ResourceLocation.withDefaultNamespace("textures/entity/llama/decor/gray.png"),
-			ResourceLocation.withDefaultNamespace("textures/entity/llama/decor/light_gray.png"),
-			ResourceLocation.withDefaultNamespace("textures/entity/llama/decor/cyan.png"),
-			ResourceLocation.withDefaultNamespace("textures/entity/llama/decor/purple.png"),
-			ResourceLocation.withDefaultNamespace("textures/entity/llama/decor/blue.png"),
-			ResourceLocation.withDefaultNamespace("textures/entity/llama/decor/brown.png"),
-			ResourceLocation.withDefaultNamespace("textures/entity/llama/decor/green.png"),
-			ResourceLocation.withDefaultNamespace("textures/entity/llama/decor/red.png"),
-			ResourceLocation.withDefaultNamespace("textures/entity/llama/decor/black.png")
-	};
-	private static final ResourceLocation TRADER_LLAMA = ResourceLocation.withDefaultNamespace("textures/entity/llama/decor/trader_llama.png");
-	private final LlamaModel<LootLlama> model;
+public class LootLlamaDecorLayer extends RenderLayer<LootLlamaRenderState, LlamaModel> {
+	private final LlamaModel adultModel;
+	private final LlamaModel babyModel;
+	private final EquipmentLayerRenderer equipmentRenderer;
 
-	public LootLlamaDecorLayer(RenderLayerParent<LootLlama, LlamaModel<LootLlama>> renderer, EntityModelSet modelSet) {
+	public LootLlamaDecorLayer(RenderLayerParent<LootLlamaRenderState, LlamaModel> renderer, EntityModelSet modelSet, EquipmentLayerRenderer equipmentRenderer) {
 		super(renderer);
-		this.model = new LlamaModel<>(modelSet.bakeLayer(ModelLayers.LLAMA_DECOR));
+		this.equipmentRenderer = equipmentRenderer;
+		this.adultModel = new LlamaModel(modelSet.bakeLayer(ModelLayers.LLAMA_DECOR));
+		this.babyModel = new BabyLlamaModel(modelSet.bakeLayer(ModelLayers.LLAMA_BABY_DECOR));
 	}
 
-	public void render(
-			PoseStack poseStack,
-			MultiBufferSource buffer,
-			int packedLight,
-			LootLlama livingEntity,
-			float limbSwing,
-			float limbSwingAmount,
-			float partialTicks,
-			float ageInTicks,
-			float netHeadYaw,
-			float headPitch
-	) {
-		DyeColor dyecolor = livingEntity.getSwag();
-		ResourceLocation resourcelocation;
-		if (dyecolor != null) {
-			resourcelocation = TEXTURE_LOCATION[dyecolor.getId()];
-		} else {
-			if (!livingEntity.isTraderLlama()) {
-				return;
-			}
-
-			resourcelocation = TRADER_LLAMA;
+	@Override
+	public void submit(PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, LootLlamaRenderState state, float yRot, float xRot) {
+		ItemStack itemStack = state.bodyItem;
+		Equippable equippable = itemStack.get(DataComponents.EQUIPPABLE);
+		if (equippable != null && equippable.assetId().isPresent() && !state.isBaby) {
+			this.renderEquipment(poseStack, submitNodeCollector, state, itemStack, equippable.assetId().get(), lightCoords);
+		} else if (state.isTraderLlama) {
+			this.renderEquipment(
+					poseStack,
+					submitNodeCollector,
+					state,
+					ItemStack.EMPTY,
+					state.isBaby ? EquipmentAssets.TRADER_LLAMA_BABY : EquipmentAssets.TRADER_LLAMA,
+					lightCoords
+			);
 		}
+	}
 
-		this.getParentModel().copyPropertiesTo(this.model);
-		this.model.setupAnim(livingEntity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-		VertexConsumer vertexconsumer = buffer.getBuffer(RenderType.entityCutoutNoCull(resourcelocation));
-		this.model.renderToBuffer(poseStack, vertexconsumer, packedLight, OverlayTexture.NO_OVERLAY);
+	private void renderEquipment(
+			PoseStack poseStack,
+			SubmitNodeCollector submitNodeCollector,
+			LlamaRenderState state,
+			ItemStack itemStack,
+			ResourceKey<EquipmentAsset> equipmentAssetId,
+			int lightCoords
+	) {
+		LlamaModel model = state.isBaby ? this.babyModel : this.adultModel;
+		this.equipmentRenderer
+				.renderLayers(
+						EquipmentClientInfo.LayerType.LLAMA_BODY,
+						equipmentAssetId,
+						model,
+						state,
+						itemStack,
+						poseStack,
+						submitNodeCollector,
+						lightCoords,
+						state.outlineColor
+				);
 	}
 }

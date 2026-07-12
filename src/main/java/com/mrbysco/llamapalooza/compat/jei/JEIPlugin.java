@@ -10,17 +10,16 @@ import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
-	private static final ResourceLocation UID = LlamaPalooza.modLoc("jei_plugin");
+	private static final Identifier UID = LlamaPalooza.modLoc("jei_plugin");
 
 	@Override
-	public ResourceLocation getPluginUid() {
+	public Identifier getPluginUid() {
 		return UID;
 	}
 
@@ -39,13 +38,5 @@ public class JEIPlugin implements IModPlugin {
 		public Object getSubtypeData(ItemStack ingredient, UidContext context) {
 			return ingredient.get(LlamaDataComponents.LOOT_TABLE);
 		}
-
-		@Override
-		public String getLegacyStringSubtypeInfo(ItemStack ingredient, UidContext context) {
-			ResourceLocation lootTable = ingredient.get(LlamaDataComponents.LOOT_TABLE);
-			if (lootTable == null) return "";
-			return BuiltInRegistries.ITEM.getKey(ingredient.getItem()) + "@" + lootTable;
-		}
-
 	}
 }
