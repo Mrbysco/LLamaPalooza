@@ -16,6 +16,11 @@ public class LLamaConfig {
 		public final ModConfigSpec.IntValue speedReduction;
 		public final ModConfigSpec.BooleanValue alwaysSpit;
 
+		public final ModConfigSpec.IntValue maxSpeed;
+		public final ModConfigSpec.IntValue maxGain;
+		public final ModConfigSpec.IntValue maxStrength;
+
+
 		Common(ModConfigSpec.Builder builder) {
 			builder.comment("General settings")
 					.push("general");
@@ -43,6 +48,22 @@ public class LLamaConfig {
 					.comment("If true, Loot Llamas will always spit items even when there are no players nearby. ",
 							"Otherwise, they will only spit items when a player is within 16 blocks of them. [default = false]")
 					.define("alwaysSpit", true);
+
+			builder.pop();
+			builder.comment("Llama settings")
+					.push("llama");
+
+			maxSpeed = builder
+					.comment("The maximum Loot Speed level a Loot Llama can have [default = 10]")
+					.defineInRange("maxSpeed", 10, 1, Integer.MAX_VALUE);
+
+			maxGain = builder
+					.comment("The maximum Loot Gain level a Loot Llama can have [default = 10]")
+					.defineInRange("maxGain", 10, 1, Integer.MAX_VALUE);
+
+			maxStrength = builder
+					.comment("The maximum Loot Strength level a Loot Llama can have [default = 10]")
+					.defineInRange("maxStrength", 10, 1, Integer.MAX_VALUE);
 
 			builder.pop();
 		}

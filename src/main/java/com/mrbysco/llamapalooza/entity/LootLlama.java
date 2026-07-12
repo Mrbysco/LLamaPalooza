@@ -87,7 +87,7 @@ public class LootLlama extends Llama {
 	}
 
 	public int getMaxLootSpeed() {
-		return 10;
+		return LLamaConfig.COMMON.maxSpeed.get();
 	}
 
 	public int getLootSpeed() {
@@ -99,7 +99,7 @@ public class LootLlama extends Llama {
 	}
 
 	public int getMaxLootGain() {
-		return 10;
+		return LLamaConfig.COMMON.maxGain.get();
 	}
 
 	public int getLootGain() {
@@ -111,7 +111,7 @@ public class LootLlama extends Llama {
 	}
 
 	public int getMaxLootStrength() {
-		return 10;
+		return LLamaConfig.COMMON.maxStrength.get();
 	}
 
 	public void setTimer(int count) {
@@ -221,13 +221,13 @@ public class LootLlama extends Llama {
 			int currentGain = Mth.ceil((this.getLootGain() + otherLlama.getLootGain()) / 2.0);
 			int currentStrength = Mth.ceil((this.getLootStrength() + otherLlama.getLootStrength()) / 2.0);
 			//Have a chance of increasing a stat by 1
-			if (currentSpeed < getMaxLootSpeed() && this.random.nextInt(10) == 0) {
+			if (currentSpeed < getMaxLootSpeed() && this.random.nextInt(getMaxLootSpeed()) == 0) {
 				currentSpeed = Math.min(currentSpeed + 1, getMaxLootSpeed());
 			}
-			if (currentSpeed < getMaxLootGain() && this.random.nextInt(10) == 0) {
+			if (currentSpeed < getMaxLootGain() && this.random.nextInt(getMaxLootGain()) == 0) {
 				currentGain = Math.min(currentGain + 1, getMaxLootGain());
 			}
-			if (currentSpeed < getMaxLootStrength() && this.random.nextInt(10) == 0) {
+			if (currentSpeed < getMaxLootStrength() && this.random.nextInt(getMaxLootStrength()) == 0) {
 				currentStrength = Math.min(currentStrength + 1, getMaxLootStrength());
 			}
 			//Set the stats to the offspring

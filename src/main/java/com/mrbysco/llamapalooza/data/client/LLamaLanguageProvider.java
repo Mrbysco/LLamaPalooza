@@ -28,6 +28,11 @@ public class LLamaLanguageProvider extends LanguageProvider {
 		addConfig("spitInterval", "Spit Interval", "The interval in ticks between Loot Llamas spitting items out (20 ticks = 1 second) [default = 200 ticks])");
 		addConfig("speedReduction", "Speed Reduction", "The amount of ticks reduced per Speed upgrade level (20 ticks = 1 second) [default = 20 ticks]");
 		addConfig("alwaysSpit", "Always Spit", "If true, Loot Llamas will always spit items even when there are no players nearby. Otherwise, they will only spit items when a player is within 16 blocks of them. [default = false]");
+
+		addConfig("llama", "Llama", "Llama Settings");
+		addConfig("maxSpeed", "Max Speed", "The maximum Loot Speed level a Loot Llama can have [default = 10]");
+		addConfig("maxGain", "Max Gain", "The maximum Loot Gain level a Loot Llama can have [default = 10]");
+		addConfig("maxStrength", "Max Strength", "The maximum Loot Strength level a Loot Llama can have [default = 10]");
 	}
 
 	/**
