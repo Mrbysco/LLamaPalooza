@@ -4,5 +4,15 @@
   "entity.llamapalooza.item_spit": "Item Spit",
   "entity.llamapalooza.loot_llama": "Loot Llama",
   "item.llamapalooza.loot_llama_spawn_egg": "Loot Llama Spawn Egg",
-  "itemGroup.llamapalooza": "LlamaPalooza"
+  "itemGroup.llamapalooza": "LlamaPalooza",
+  "llamapalooza.configuration.alwaysSpit": "Always Spit",
+  "llamapalooza.configuration.alwaysSpit.tooltip": "If true, Loot Llamas will always spit items even when there are no players nearby. Otherwise, they will only spit items when a player is within 16 blocks of them. [default = false]",
+  "llamapalooza.configuration.general": "General",
+  "llamapalooza.configuration.general.tooltip": "General Settings",
+  "llamapalooza.configuration.speedReduction": "Speed Reduction",
+  "llamapalooza.configuration.speedReduction.tooltip": "The amount of ticks reduced per Speed upgrade level (20 ticks = 1 second) [default = 20 ticks]",
+  "llamapalooza.configuration.spitInterval": "Spit Interval",
+  "llamapalooza.configuration.spitInterval.tooltip": "The interval in ticks between Loot Llamas spitting items out (20 ticks = 1 second) [default = 200 ticks])",
+  "llamapalooza.configuration.tables": "Loot Tables",
+  "llamapalooza.configuration.tables.tooltip": "The list of loot tables known to the mod (Syntax: namespace:loot_table_name, e.g. minecraft:chests/simple_dungeon)"
 }

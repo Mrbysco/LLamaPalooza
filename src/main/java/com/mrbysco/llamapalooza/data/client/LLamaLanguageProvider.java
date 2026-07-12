@@ -22,6 +22,12 @@ public class LLamaLanguageProvider extends LanguageProvider {
 
 		add("config.jade.plugin_llamapalooza.stats", "Stats: %s/%s/%s");
 		add("config.jade.plugin_llamapalooza.cooldown", "Spit Cooldown: %s");
+
+		addConfig("general", "General", "General Settings");
+		addConfig("tables", "Loot Tables", "The list of loot tables known to the mod (Syntax: namespace:loot_table_name, e.g. minecraft:chests/simple_dungeon)");
+		addConfig("spitInterval", "Spit Interval", "The interval in ticks between Loot Llamas spitting items out (20 ticks = 1 second) [default = 200 ticks])");
+		addConfig("speedReduction", "Speed Reduction", "The amount of ticks reduced per Speed upgrade level (20 ticks = 1 second) [default = 20 ticks]");
+		addConfig("alwaysSpit", "Always Spit", "If true, Loot Llamas will always spit items even when there are no players nearby. Otherwise, they will only spit items when a player is within 16 blocks of them. [default = false]");
 	}
 
 	/**
