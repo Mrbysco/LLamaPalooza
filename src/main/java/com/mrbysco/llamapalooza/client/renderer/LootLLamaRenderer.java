@@ -7,7 +7,6 @@ import net.minecraft.client.model.LlamaModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.layers.LlamaDecorLayer;
 import net.minecraft.resources.ResourceLocation;
 
 public class LootLLamaRenderer extends MobRenderer<LootLlama, LlamaModel<LootLlama>> {

@@ -3,7 +3,6 @@ package com.mrbysco.llamapalooza.registry;
 import com.mrbysco.llamapalooza.LlamaPalooza;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.LootTable;
 
 public class LLamaTables {
