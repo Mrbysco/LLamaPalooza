@@ -1,9 +1,8 @@
 plugins {
-    id 'eclipse'
     id 'idea'
+    id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.gradle' version '[6.0.18,6.2)'
-    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'net.neoforged.moddev.legacyforge' version '2.0.141'
     id 'net.darkhax.curseforgegradle' version '1.1.28'
     id 'com.modrinth.minotaur' version "2.+"
 }
@@ -17,91 +16,65 @@ base {
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
-minecraft {
-    mappings channel: mapping_channel, version: mapping_version
+legacyForge {
+    // Develop against MinecraftForge (the versions can be found at https://files.minecraftforge.net/)
+    version = "${mc_version}-${forge_version}"
 
-    copyIdeResources = true
+    parchment {
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.hasProperty("parchment_minecraft_version") ? project.parchment_minecraft_version : project.mc_version
+    }
 
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    // Validate AT files and raise errors when they have invalid targets
+    // This option is false by default, but turning it on is recommended
+    validateAccessTransformers = true
 
     runs {
         client {
-            workingDirectory project.file('run')
-            jvmArgs '-Xmx4G'
-
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-
-            // Recommended logging data for a userdev environment
-            // property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', "${mod_id}"
-
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
+            client()
         }
-
         server {
-            workingDirectory project.file('run')
-            jvmArgs '-Xmx4G'
-
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-
-            // Recommended logging data for a userdev environment
-            // property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', "${mod_id}"
-
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
+            server()
+        }
+        data {
+            data()
+            programArguments.addAll '--mod', "${mod_id}", '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
         }
 
-        data {
-            workingDirectory project.file('run')
-            jvmArgs '-Xmx4G'
+        configureEach { run ->
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
 
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            if (javaToolchains.launcherFor(java.toolchain).map { it.metadata.vendor }.getOrElse('').contains('JetBrains')) {
+                jvmArguments.addAll('-XX:+IgnoreUnrecognizedVMOptions', '-XX:+AllowEnhancedClassRedefinition')
+            }
 
-            // Recommended logging data for a userdev environment
-            // property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.markers', 'REGISTRIES'
+            jvmArgument '-Xmx4G'
 
             // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
+            systemProperty 'forge.logging.console.level', 'debug'
+        }
+    }
 
-            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', "${mod_id}", '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
         }
     }
 }
 
 // Include resources generated by data generators.
 sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+// Sets up a dependency configuration called 'localRuntime' and a deobfuscating one called 'modLocalRuntime'
+// These configurations should be used instead of 'runtimeOnly' to declare
+// a dependency that will be present for runtime testing but that is
+// "optional", meaning it will not be pulled by dependents of this mod.
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
+obfuscation {
+    createRemappingConfiguration(configurations.localRuntime)
+}
 
 repositories {
     maven {
@@ -116,17 +89,18 @@ repositories {
 }
 
 dependencies {
-    minecraft  "net.neoforged:forge:${mc_version}-${neo_version}"
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    compileOnly "org.jetbrains:annotations:24.0.1"
 
-    compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
-    compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
+    modCompileOnly("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
+    modCompileOnly("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
 
-    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
+    localRuntime("mezz.jei:jei-${mc_version}-forge:${jei_version}")
 
-    implementation fg.deobf("com.blamejared.crafttweaker:CraftTweaker-forge-${mc_version}:${crafttweaker_version}")
+    modImplementation("com.blamejared.crafttweaker:CraftTweaker-forge-${mc_version}:${crafttweaker_version}")
 
-    implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
-    implementation fg.deobf("curse.maven:TheOneProbe-245211:${top_id}")
+    modImplementation("curse.maven:jade-324717:${jade_id}")
+    modImplementation("curse.maven:TheOneProbe-245211:${top_id}")
 }
 
 jar {
