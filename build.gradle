@@ -103,7 +103,7 @@ dependencies {
     modImplementation("curse.maven:TheOneProbe-245211:${top_id}")
 }
 
-jar {
+tasks.named('jar', Jar).configure {
     manifest {
         attributes([
                 "Specification-Title"     : "${mod_id}",
@@ -116,8 +116,6 @@ jar {
         ])
     }
 }
-
-jar.finalizedBy('reobfJar')
 
 publishing {
     publications {
@@ -146,7 +144,7 @@ if (System.getenv().CURSEFORGE_KEY) {
     task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
         apiToken = System.getenv().CURSEFORGE_KEY
 
-        def mainFile = upload(project.curseforge_id, jar)
+        def mainFile = upload(project.curseforge_id, reobfJar)
         mainFile.releaseType = 'release'
         mainFile.addModLoader("NeoForge", "Forge")
         mainFile.addGameVersion("${mc_version}")
@@ -167,7 +165,7 @@ if (System.getenv().MODRINTH_KEY) {
         versionType = "beta"
         versionName = "${mod_name} ${mc_version}"
         versionNumber = project.version
-        uploadFile = jar
+        uploadFile = reobfJar
         changelog = file("$project.rootDir/changelog.md").text
         gameVersions = ["${mc_version}"]
         loaders = ["forge","neoforge"]
