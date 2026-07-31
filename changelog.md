@@ -1,1 +1,1 @@
-* Update to 26.1.2
+* Fix logic error in breeding stat inheritance ([#1](https://github.com/Mrbysco/LLamaPalooza/pull/1))
