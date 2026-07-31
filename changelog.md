@@ -1,3 +1,1 @@
-* Re-enable JEI support
-* Add config options to set the max loot speed / strength and gain
-* Add missing language translation keys for the config options
+* Fix logic error in breeding stat inheritance ([#1](https://github.com/Mrbysco/LLamaPalooza/pull/1))
