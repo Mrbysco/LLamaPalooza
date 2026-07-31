@@ -1,1 +1,1 @@
-* Fix logic error in breeding stat inheritance ([#1](https://github.com/Mrbysco/LLamaPalooza/pull/1))
+* Fix logic error in breeding stat inheritance ([#1](https://github.com/Mrbysco/LLamaPalooza/pull/1)) 
